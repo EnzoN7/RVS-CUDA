@@ -57,38 +57,22 @@ Tested on RTX A4500.
 
 .
 ├── Build/
-
-│   └── Release/
-
-│       └── RVS.exe
-
+│    └── Release/
+│        └── RVS.exe
 ├── Config/
-
-│   ├── RVS-A01.json
-
-│   ├── A01.json
-
-│   └── PoseTrace.csv
-
+│    ├── RVS-A01.json
+│    ├── A01.json
+│    └── PoseTrace.csv
 ├── Content/
-
-│   └── A01/
-
-│       └── *.yuv
-
+│    └── A01/
+│        └── *.yuv
 ├── Experiment/
-
-│   └── A01/
-
-│       └── *.yuv
-
+│    └── A01/
+│        └── *.yuv
 ├── rvs/
-
-│   └── src/
-
+│    └── src/
 └── rvs_cuda_lib/
-
-    └── src/
+     └── src/
 
 ## Usage[^2]
 
