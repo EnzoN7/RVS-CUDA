@@ -18,7 +18,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Quality and performance
 
-### Comparison of time for producing a "Perspective" type image
+### Comparison of time for producing a «Perspective» type image
 
 | Sequence         | Input Views | CPU (ms) | OpenGL (ms) | CUDA (ms) | Speedup (CPU / CUDA) |
 |------------------|-------------|----------|-------------|-----------|---------------------|
@@ -26,7 +26,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 | Museum           | 11          | 28252    | 2926        | **509.0** | 55.50               |
 | Chess            | 4           | 8034     | 1062        | **110.0** | 73.04               |
 
-### Quality of different implementations on ClassroomVideo
+### Quality of different implementations on «ClassroomVideo»
 
 | Implementation    | WS-PSNR (dB)                          | IV-PSNR (dB) | SSIM                                  |
 |-------------------|--------------------------------------|-------------|---------------------------------------|
@@ -34,7 +34,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 | **OpenGL**| Y: 33.46, U: 49.12, V: 51.79         | 43.57       | Y: 0.8270, U: 0.9906, V: 0.9943       |
 | **CUDA**  | Y: 33.43, U: 50.41, V: 52.79         | 44.51       | Y: 0.8243, U: 0.9929, V: 0.9954       |
 
-### Quality of different implementations on Museum
+### Quality of different implementations on «Museum»
 
 | Implementation    | WS-PSNR (dB)                          | IV-PSNR (dB) | SSIM                                  |
 |-------------------|--------------------------------------|-------------|---------------------------------------|
@@ -42,7 +42,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 | **OpenGL**| Y: 29.42, U: 38.65, V: 39.87         | 36.36       | Y: 0.8989, U: 0.9250, V: 0.9434       |
 | **CUDA**  | Y: 30.09, U: 38.04, V: 39.19         | 37.71       | Y: 0.9085, U: 0.9124, V: 0.9333       |
 
-### Quality of different implementations on Chess
+### Quality of different implementations on «Chess»
 
 | Implementation    | WS-PSNR (dB)                          | IV-PSNR (dB) | SSIM                                  |
 |-------------------|--------------------------------------|-------------|---------------------------------------|
