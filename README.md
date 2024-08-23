@@ -175,7 +175,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 * The input files have an «Equirectangular» projection type.
 * The output files are YUV texture files.
 
-## Suggested project organization
+### Suggested project organization
 
 - Build/
   - Release/
