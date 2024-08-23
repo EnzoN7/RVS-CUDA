@@ -113,23 +113,26 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 
 #### Suggested project organization
 
-- Build/
-  - Release/
-    - RVS.exe
-- Config/
-  - RVS-A01.json
-  - A01.json
-  - PoseTrace.csv
-- Content/
-  - A01/
-    - *.yuv
-- Experiment/
-  - A01/
-    - *.yuv
-- rvs/
-  - src/
-- rvs_cuda_lib/
-  - src/
+```
+.
+├── Build/
+│   └── Release/
+│       └── RVS.exe
+├── Config/
+│   ├── RVS-A01.json
+│   ├── A01.json
+│   └── PoseTrace.csv
+├── Content/
+│   └── A01/
+│       └── *.yuv
+├── Experiment/
+│   └── A01/
+│       └── *.yuv
+├── rvs/
+│   └── src/
+└── rvs_cuda_lib/
+    └── src/
+```
 
 
 ### How to run RVS-CUDA
