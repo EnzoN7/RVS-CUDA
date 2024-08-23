@@ -6,7 +6,7 @@ This new version of «RVS - Reference View Synthesizer»[^1] was developed as pa
 
 The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras arranged in an orderly manner, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
 
-## Example of view synthesis using RVS on «ClassroomVideo»
+## Example of view synthesis using RVS on «ClassroomVideo» [^3]
 
 **Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
@@ -28,7 +28,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ### Quality of different implementations on «ClassroomVideo»
 
-| Implementation    | WS-PSNR (dB)                          | IV-PSNR (dB) | SSIM                                  |
+| Implementation    | WS-PSNR [^4] (dB)                          | IV-PSNR [^5] (dB) | SSIM [^6]                           |
 |-------------------|--------------------------------------|-------------|---------------------------------------|
 | **CPU**   | Y: 33.61, U: 49.57, V: 52.21         | 44.16       | Y: 0.8287, U: 0.9913, V: 0.9947       |
 | **OpenGL**| Y: 33.46, U: 49.12, V: 51.79         | 43.57       | Y: 0.8270, U: 0.9906, V: 0.9943       |
@@ -136,3 +136,7 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 [^1]: MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
 [^2]: S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
+[^3] MPEG-I Visual, Content Database, https://mpeg-miv.org/index.php/content-database-2/
+[^4] Sun, Y., Lu, A., & Yu, L. (2017). Weighted-to-Spherically-Uniform Quality Evaluation for Omnidirectional Video. IEEE Signal Processing Letters, 24(9), 1-1. https://doi.org/10.1109/LSP.2017.2720693.
+[^5] Dziembowski, A., Mieloch, D., Stankowski, J., & Grzelka, A. (2022). IV-PSNR—The Objective Quality Metric for Immersive Video Applications. IEEE Transactions on Circuits and Systems for Video Technology, 32(11), 7575–7591. https://doi.org/10.1109/TCSVT.2022.3179575.
+[^6] Wang, Z., Bovik, A. C., Sheikh, H. R., & Simoncelli, E. P. (2004). Image Quality Assessment: From Error Visibility to Structural Similarity. IEEE Transactions on Image Processing, 13(4), 600–612. https://doi.org/10.1109/TIP.2003.819861.
