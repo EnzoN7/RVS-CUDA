@@ -63,7 +63,7 @@ Build with CMake.
 * [glm (all versions)](https://github.com/g-truc/glm)
 * [Catch2 (all versions)](https://github.com/catchorg/Catch2)
 
-### Commandline parameters
+### Command line parameters
 
 #### Example
 
