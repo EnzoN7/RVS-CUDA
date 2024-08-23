@@ -64,6 +64,7 @@ Build with CMake (file: ```/CMakeLists.txt```).
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [glm (tested on v1.0.0)](https://github.com/g-truc/glm)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
+* [CUDA (tested on v12.4)](https://developer.nvidia.com/cuda-12-4-0-download-archive)
 
 ### CUDA architectures and corresponding compute capabilities[^9]
 
