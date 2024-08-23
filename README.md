@@ -124,8 +124,9 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 * Only works for images in YUV420 format.
 * The blending factor is always greater than or equal to 1.
-* The blending method is always set to *Simple*.
-* Output files are YUV texture files.
+* The blending method is always set to «Simple».
+* The input files have an «Equirectangular» projection type.
+* The output files are YUV texture files.
 
 
 ## Author
