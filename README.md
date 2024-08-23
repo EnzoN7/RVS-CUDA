@@ -56,7 +56,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ### Building and dependencies
 
-Build with CMake.
+Build with CMake (file: ./rvs/CMakeLists.txt).
 
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
