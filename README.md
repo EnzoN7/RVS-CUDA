@@ -58,7 +58,7 @@ Tested on RTX A4500.
 
 ### Building and dependencies
 
-Build with CMake (file: ```/rvs/CMakeLists.txt```).
+Build with CMake (file: ```/CMakeLists.txt```).
 
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
@@ -67,7 +67,7 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 ### CUDA architectures and corresponding compute capabilities[^9]
 
-Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/rvs/CMakeLists.txt``` file according to your NVIDIA GPU architecture.
+Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` file according to your NVIDIA GPU architecture.
 
 | Compute Capability | Architecture       | Example GPUs                          |
 |--------------------|-------------------|---------------------------------------|
@@ -92,7 +92,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/rvs/CMakeLists.txt
 
 ### Command line parameters
 
-#### Example
+#### Formatting
 
 ```bash
 /pathToBuildFolder/Release/RVS.exe /pathToConfigFolder/RVS-{Sequence}.json [--cuda | --opengl]
