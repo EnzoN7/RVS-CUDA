@@ -6,6 +6,27 @@ This new version of «RVS - Reference View Synthesizer»[^1] was developed as pa
 
 The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras arranged in an orderly manner, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
 
+## Table of Contents
+- [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
+- [Quality and performance](#quality-and-performance)
+  - [Comparison of time for producing a «Perspective» type image](#comparison-of-time-for-producing-a-perspective-type-image)
+  - [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
+  - [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
+  - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
+- [Usage](#usage)
+  - [Building and dependencies](#building-and-dependencies)
+  - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
+  - [Command line parameters](#command-line-parameters)
+    - [Formatting](#formatting)
+    - [General parameters](#general-parameters)
+    - [View Synthesis Json parameters](#view-synthesis-json-parameters)
+    - [Camera Json parameters](#camera-json-parameters)
+    - [Differences from the initial version](#differences-from-the-initial-version)
+- [Suggested project organization](#suggested-project-organization)
+- [Author of RVS-CUDA](#author-of-rvs-cuda)
+- [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
+- [License of the initial RVS software](#license-of-the-initial-rvs-software)
+
 ## Example of view synthesis using RVS on «ClassroomVideo»[^3]
 
 **Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**
