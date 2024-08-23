@@ -1,6 +1,8 @@
-# RVS software
+# Initial RVS software
 
 ## Description
+
+This is the README of the initial software, before the CUDA implementation. Please note that most of the source files in this project have been modified.
 
 This software computes novel views.
 
@@ -51,14 +53,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 ## Usage
 
 ### Commandline parameters
-
-#### General parameters
-
-| Cmd | Description |
-|:----|:------------|
-|     | json file path |
-| --noopengl | using cpu |
-| --analyzer |  analyse  |
 
 #### Camera Json parameters
 
