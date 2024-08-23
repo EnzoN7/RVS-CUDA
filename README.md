@@ -67,8 +67,6 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/rvs/CMakeLists.txt``` file according to your NVIDIA GPU architecture.
 
-### CUDA Architectures and Corresponding Compute Capabilities
-
 | Compute Capability | Architecture       | Example GPUs                          |
 |--------------------|-------------------|---------------------------------------|
 | **30**             | Kepler            | GTX 780, Tesla K20                    |
