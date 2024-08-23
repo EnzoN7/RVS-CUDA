@@ -54,16 +54,31 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Usage [^2]
 
+### Building and dependencies
+
+Build with CMake.
+
+* [OpenCV (all versions)](https://github.com/opencv/opencv)
+* [fmt (all versions)](https://github.com/fmtlib/fmt)
+* [glm (all versions)](https://github.com/g-truc/glm)
+* [Catch2 (all versions)](https://github.com/catchorg/Catch2)
+
 ### Commandline parameters
+
+#### Example
+
+```bash
+./pathToExe/Release/RVS.exe ./Config/RVS-A01.json [--cuda | --OpenGL | ]
+```
 
 #### General parameters
 
 | Cmd | Description |
 |:----|:------------|
 |     | json file path |
+|     | default version: CPU |
 | --cuda | using CUDA speedup |
 | --opengl | using OpenGL speedup |
-|  | using only CPU |
 
 #### Camera Json parameters
 
