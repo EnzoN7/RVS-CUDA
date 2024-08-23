@@ -65,6 +65,8 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 ### CUDA architectures and corresponding compute capabilities[^9]
 
+Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/rvs/CMakeLists.txt``` file according to your NVIDIA GPU architecture.
+
 | Architecture       | Compute Capabilities |
 |-------------------|---------------------|
 | **Kepler**        | 30, 32, 35, 37      |
