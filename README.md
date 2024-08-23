@@ -67,5 +67,5 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## References
 
-* [^1]: MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
-* [^2]: S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
+[^1]: MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
+[^2]: S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
