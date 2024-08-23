@@ -46,7 +46,7 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 set(PROJECT_NAME "RVS")
 project(${PROJECT_NAME} LANGUAGES CXX CUDA)
-set(CMAKE_CUDA_ARCHITECTURES 86)
+set(CMAKE_CUDA_ARCHITECTURES 75)
 
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/cmake/easy_profiler/")
@@ -123,16 +123,16 @@ if(WITH_OPENGL)
 		set(OPENGL_LIB ${OPENGL_LIBRARY})
 
 		set(OPENGL_SOURCES
-			src/gl_core_4.5.cpp
-			src/helpersGL.cpp
-			src/RFBO.cpp
-			src/Shader.cpp)
+			rvs/src/gl_core_4.5.cpp
+			rvs/src/helpersGL.cpp
+			rvs/src/RFBO.cpp
+			rvs/src/Shader.cpp)
 
 		set(OPENGL_HEADERS
-			src/gl_core_4.5.hpp
-			src/helpersGL.hpp
-			src/RFBO.hpp
-			src/Shader.hpp)
+			rvs/src/gl_core_4.5.hpp
+			rvs/src/helpersGL.hpp
+			rvs/src/RFBO.hpp
+			rvs/src/Shader.hpp)
 		
 		add_definitions(-DWITH_OPENGL)
 
@@ -157,116 +157,83 @@ else()
 endif()
 
 set(PROJECT_SOURCES
-	src/BlendedView.cpp
-	src/PolynomialDepth.cpp
-	src/Config.cpp
-	src/Parameters.cpp
-	src/JsonParser.cpp
-	src/Pipeline.cpp
-	src/SynthesizedView.cpp
-	src/View.cpp
-	src/blending.cpp
-	src/image_loading.cpp
-	src/image_writing.cpp
-	src/inpainting.cpp
-	src/transform.cpp
-	src/Unprojector.cpp
-	src/Projector.cpp
-	src/PerspectiveUnprojector.cpp
-	src/PerspectiveProjector.cpp
-	src/EquirectangularUnprojector.cpp
-	src/EquirectangularProjector.cpp
-	src/PoseTraces.cpp
-	src/SpaceTransformer.cpp)
+	rvs/src/BlendedView.cpp
+	rvs/src/PolynomialDepth.cpp
+	rvs/src/Config.cpp
+	rvs/src/Parameters.cpp
+	rvs/src/JsonParser.cpp
+	rvs/src/Pipeline.cpp
+	rvs/src/SynthesizedView.cpp
+	rvs/src/View.cpp
+	rvs/src/blending.cpp
+	rvs/src/image_loading.cpp
+	rvs/src/image_writing.cpp
+	rvs/src/inpainting.cpp
+	rvs/src/transform.cpp
+	rvs/src/Unprojector.cpp
+	rvs/src/Projector.cpp
+	rvs/src/PerspectiveUnprojector.cpp
+	rvs/src/PerspectiveProjector.cpp
+	rvs/src/EquirectangularUnprojector.cpp
+	rvs/src/EquirectangularProjector.cpp
+	rvs/src/PoseTraces.cpp
+	rvs/src/SpaceTransformer.cpp)
 
 set(PROJECT_HEADERS
-	src/BlendedView.hpp
-	src/PolynomialDepth.hpp
-	src/Config.hpp
-	src/JsonParser.hpp
-	src/Pipeline.hpp
-	src/SynthesizedView.hpp
-	src/View.hpp
-	src/blending.hpp
-	src/Parameters.hpp
-	src/image_loading.hpp
-	src/image_writing.hpp
-	src/inpainting.hpp
-	src/transform.hpp
-	src/IntegralImage2D.h
-	src/Unprojector.hpp
-	src/Projector.hpp
-	src/PerspectiveUnprojector.hpp
-	src/PerspectiveProjector.hpp
-	src/EquirectangularUnprojector.hpp
-	src/EquirectangularProjector.hpp
-	src/PoseTraces.hpp
-	src/SpaceTransformer.hpp)
-
-set(CONFIGURATION_FILES
-	config_files/example_config_file.json
-	config_files/ClassroomVideo.json
-	config_files/TechnicolorMuseum.json
-	config_files/TechnicolorHijack.json
-	config_files/ULB_Unicorn.json
-	config_files/_integration_tests/Unicorn_Same_View.json
-	config_files/_integration_tests/Unicorn_Triangles_MultiSpectral.json
-	config_files/_integration_tests/Unicorn_Triangles_Simple.json
-	config_files/_integration_tests/Unicorn_Triangles_Simple_OpenGL.json
-	config_files/_integration_tests/ClassroomVideo-v0_to_v0.json
-	config_files/_integration_tests/ClassroomVideo-v7v8_to_v0.json
-	config_files/_integration_tests/ClassroomVideo-v7v8_to_v0_270deg.json
-	config_files/_integration_tests/ClassroomVideo-v7v8_to_v0_OpenGL.json
-	config_files/_integration_tests/TechnicolorMuseum-v0_to_v0.json
-	config_files/_integration_tests/TechnicolorMuseum-v0v2v13v17v19_to_v1.json
-	config_files/_integration_tests/TechnicolorMuseum-v0v2v13v17v19_to_v1_OpenGL.json
-	config_files/_integration_tests/TechnicolorMuseum-v5_to_v5.json
-	config_files/_integration_tests/TechnicolorMuseum-v5_to_v6.json
-	config_files/_integration_tests/TechnicolorMuseum-PoseTrace.json
-	config_files/_integration_tests/TechnicolorHijack-BlendByMax.json
-	config_files/_integration_tests/TechnicolorHijack-v1v4_to_v9.json
-	config_files/_integration_tests/TechnicolorHijack-v1v4_to_v9_OpenGL.json)
+	rvs/src/BlendedView.hpp
+	rvs/src/PolynomialDepth.hpp
+	rvs/src/Config.hpp
+	rvs/src/JsonParser.hpp
+	rvs/src/Pipeline.hpp
+	rvs/src/SynthesizedView.hpp
+	rvs/src/View.hpp
+	rvs/src/blending.hpp
+	rvs/src/Parameters.hpp
+	rvs/src/image_loading.hpp
+	rvs/src/image_writing.hpp
+	rvs/src/inpainting.hpp
+	rvs/src/transform.hpp
+	rvs/src/IntegralImage2D.h
+	rvs/src/Unprojector.hpp
+	rvs/src/Projector.hpp
+	rvs/src/PerspectiveUnprojector.hpp
+	rvs/src/PerspectiveProjector.hpp
+	rvs/src/EquirectangularUnprojector.hpp
+	rvs/src/EquirectangularProjector.hpp
+	rvs/src/PoseTraces.hpp
+	rvs/src/SpaceTransformer.hpp)
 				 						 	 
 source_group("Source Files" FILES ${PROJECT_SOURCES} src/view_synthesis.cpp src/test.cpp)
 source_group("Header Files" FILES ${PROJECT_HEADERS})
-source_group("Configurations" FILES ${CONFIGURATION_FILES})
 if (WITH_OPENGL)
 	source_group("OpenGL Sources" FILES ${OPENGL_SOURCES})
 	source_group("OpenGL Headers" FILES ${OPENGL_HEADERS})
 endif()
 
 set(CUDA_SOURCES
-	../RVSCuda/src/blend_img.cu
-	../RVSCuda/src/inpaint_img.cu
-	../RVSCuda/src/scale_uv.cu
-	../RVSCuda/src/unproject_project.cu
-	../RVSCuda/src/process_input_frame.cu
-	../RVSCuda/src/transform_triangle.cu)
+	rvs_cuda_lib/src/blend_img.cu
+	rvs_cuda_lib/src/inpaint_img.cu
+	rvs_cuda_lib/src/scale_uv.cu
+	rvs_cuda_lib/src/unproject_project.cu
+	rvs_cuda_lib/src/process_input_frame.cu
+	rvs_cuda_lib/src/transform_triangle.cu)
 set(CUDA_HEADERS
-	../RVSCuda/src/blend_img.cuh
-	../RVSCuda/src/inpaint_img.cuh
-	../RVSCuda/src/scale_uv.cuh
-	../RVSCuda/src/unproject_project.cuh
-	../RVSCuda/src/process_input_frame.cuh
-	../RVSCuda/src/transform_triangle.cuh)
+	rvs_cuda_lib/src/blend_img.cuh
+	rvs_cuda_lib/src/inpaint_img.cuh
+	rvs_cuda_lib/src/scale_uv.cuh
+	rvs_cuda_lib/src/unproject_project.cuh
+	rvs_cuda_lib/src/process_input_frame.cuh
+	rvs_cuda_lib/src/transform_triangle.cuh)
 
 source_group("Source Files" FILES ${CUDA_SOURCES})
 source_group("Header Files" FILES ${CUDA_HEADERS})
 
-add_library(RVSCuda ${CUDA_SOURCES} ${CUDA_HEADERS})
+add_library(RVSCudaLib ${CUDA_SOURCES} ${CUDA_HEADERS})
 add_library(${PROJECT_NAME}Lib ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${OPENGL_SOURCES} ${OPENGL_HEADERS})
 
-add_executable(${PROJECT_NAME} src/Application.cpp src/Analyzer.cpp src/Application.hpp src/Analyzer.hpp src/view_synthesis.cpp)
-add_executable(${PROJECT_NAME}UnitTest src/unit_test.cpp)
-add_executable(${PROJECT_NAME}IntegrationTest src/Application.cpp src/integration_test.cpp ${CONFIGURATION_FILES})
+add_executable(${PROJECT_NAME} rvs/src/Application.cpp rvs/src/Analyzer.cpp rvs/src/Application.hpp rvs/src/Analyzer.hpp rvs/src/view_synthesis.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}Lib ${OpenCV_LIBS} ${CUDA_LIB} ${EASYPROFILER_LIB} ${OPENGL_LIB})
-target_link_libraries(${PROJECT_NAME}UnitTest ${PROJECT_NAME}Lib ${OpenCV_LIBS} ${CUDA_LIB} ${EASYPROFILER_LIB} ${OPENGL_LIB})
-target_link_libraries(${PROJECT_NAME}IntegrationTest ${PROJECT_NAME}Lib ${OpenCV_LIBS} ${CUDA_LIB} ${EASYPROFILER_LIB} ${OPENGL_LIB})
-target_link_libraries(${PROJECT_NAME}Lib RVSCuda)
+target_link_libraries(${PROJECT_NAME}Lib RVSCudaLib)
 
-target_include_directories(${PROJECT_NAME}Lib PUBLIC ../RVSCuda/src)
-
-enable_testing()
-add_test(NAME UnitTest${PROJECT_NAME} COMMAND ${PROJECT_NAME}UnitTest WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-add_test(NAME IntegrationTest${PROJECT_NAME} COMMAND ${PROJECT_NAME}IntegrationTest WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME}Lib PUBLIC rvs_cuda_lib/src)

@@ -18,6 +18,8 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Quality and performance
 
+Tested on RTX A4500.
+
 ### Comparison of time for producing a «Perspective» type image
 
 | Sequence         | Input Views | CPU (ms) | OpenGL (ms) | CUDA (ms) | Speedup (CPU / CUDA) |
@@ -93,7 +95,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/rvs/CMakeLists.txt
 #### Example
 
 ```bash
-/pathToBuildFolder/Release/RVS.exe /Config/RVS-A01.json [--cuda | --opengl]
+/pathToBuildFolder/Release/RVS.exe /pathToConfigFolder/RVS-{Sequence}.json [--cuda | --opengl]
 ```
 
 #### General parameters
