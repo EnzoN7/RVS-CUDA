@@ -122,10 +122,10 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 │   ├── RVS-A01.json
 │   ├── A01.json
 │   └── PoseTrace.csv
-├── Content/
+├── Content/\*
 │   └── A01/
 │       └── *.yuv
-├── Experiment/
+├── Experiment/\*\*
 │   └── A01/
 │       └── *.yuv
 ├── rvs/
@@ -133,6 +133,9 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 └── rvs_cuda_lib/
     └── src/
 ```
+
+\* Input files
+\*\* Output files
 
 
 ### How to run RVS-CUDA
