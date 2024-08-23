@@ -58,17 +58,17 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 Build with CMake.
 
-* [OpenCV (all versions)](https://github.com/opencv/opencv)
-* [fmt (all versions)](https://github.com/fmtlib/fmt)
-* [glm (all versions)](https://github.com/g-truc/glm)
-* [Catch2 (all versions)](https://github.com/catchorg/Catch2)
+* [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
+* [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
+* [glm (tested on v1.0.0)](https://github.com/g-truc/glm)
+* [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 
 ### Command line parameters
 
 #### Example
 
 ```bash
-./pathToExe/Release/RVS.exe ./Config/RVS-A01.json [--cuda | --OpenGL | ]
+./pathToBuildFolder/Release/RVS.exe ./Config/RVS-A01.json [--cuda | --OpenGL | ]
 ```
 
 #### General parameters
