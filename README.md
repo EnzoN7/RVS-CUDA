@@ -2,11 +2,11 @@
 
 ## Description
 
-This new version of «RVS - Reference View Synthesizer» was developed as part of my final year project in Information Technology Engineering. By leveraging techniques based on asynchronism and kernel programming (via CUDA), this new iteration is approximately 100 times faster than RVS 4.0 on the «ClassroomVideo» sequence.
+This new version of «RVS - Reference View Synthesizer»[^1] was developed as part of my final year project in Information Technology Engineering. By leveraging techniques based on asynchronism and kernel programming (via CUDA), this new iteration is approximately 100 times faster than RVS 4.0 on the «ClassroomVideo» sequence.
 
 The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras arranged in an orderly manner, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
 
-## Usage
+## Usage [^2]
 
 ### Commandline parameters
 
@@ -67,5 +67,5 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## References
 
-* MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
-* S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
+* [^1]: MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
+* [^2]: S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
