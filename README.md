@@ -22,7 +22,7 @@ The main objective of this software is to generate synthesized views enabling 6D
     - [View Synthesis Json parameters](#view-synthesis-json-parameters)
     - [Camera Json parameters](#camera-json-parameters)
     - [Differences from the initial version](#differences-from-the-initial-version)
-- [Suggested project organization](#suggested-project-organization)
+    - [Suggested project organization](#suggested-project-organization)
 - [Author of RVS-CUDA](#author-of-rvs-cuda)
 - [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
 - [License of the initial RVS software](#license-of-the-initial-rvs-software)
