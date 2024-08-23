@@ -89,16 +89,15 @@ Build with CMake.
 |Rotation      | float 3       | rotation (yaw,pitch,roll) |
 |Depthmap      | int           | has a depth |
 |Depth_range   | float 2       | min and max depth |
-|Multi_depth_range| float 2    | min and max value in multidepth (non-Lambertian) (optional, default: Depth_range) |
-|DisplacementMethod| string    | Depth or  Polynomial (optional, default: depth) |
+|DisplacementMethod| string    | Depth |
 |Resolution    | int 2    	   | resolution (pixel) |
 |Projection    | string        | perspective or equirectangular |
 |Focal         | float 2       | focal (pixel) |
 |Principle_point| float 2      | principle point (pixel) |
 |BitDepthColor | int           | color bit depth |
 |BitDepthDepth | int           | depth map bit depth |
-|ColorSpace    | string        | YUV420 or YUV400 |
-|DepthColorSpace| string       | YUV420 or YUV400 |
+|ColorSpace    | string        | YUV420 |
+|DepthColorSpace| string       | YUV420 |
 
 #### View Synthesis Json parameters
 
@@ -115,12 +114,19 @@ Build with CMake.
 |OutputFiles               | string list | filepaths to output images |
 |StartFrame                | int         | first frame (starts at 0) |
 |NumberOfFrames            | int         | number of frames in the input |
-|NumberOfOutputFrames      | int         | number of frame in the output (optional, default: NumberOfFrames) |
 |Precision                 | float       | precision level |
-|ColorSpace                | string      | RGB or YUV working colorspace |
+|ColorSpace                | string      | YUV working colorspace |
 |ViewSynthesisMethod       | string      | Triangles |
-|BlendingMethod            | string      | Simple or Multispectral |
+|BlendingMethod            | string      | Simple |
 |BlendingFactor            | float       | factor in the blending |
+
+#### Differences from the initial version
+
+* Only works for images in YUV420 format.
+* The blending factor is always greater than or equal to 1.
+* The blending method is always set to *Simple*.
+* Output files are YUV texture files.
+
 
 ## Author
 
