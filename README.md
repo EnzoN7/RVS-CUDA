@@ -2,7 +2,7 @@
 
 ## Description
 
-This new version of «RVS - Reference View Synthesizer»[^1] was developed as part of my final year project in Information Technology Engineering. By leveraging techniques based on asynchronism and kernel programming (via CUDA), this new iteration is approximately 100 times faster than RVS 4.0 on the «ClassroomVideo» sequence.
+This new version of «RVS - Reference View Synthesizer»[^1] was developed as part of my final year project in Information Technology Engineering. By leveraging techniques based on asynchronism and kernel programming (via CUDA), this new iteration is approximately 100 times faster than RVS 4.0 on the «ClassroomVideo»[^3] sequence.
 
 The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras arranged in an orderly manner, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
 
@@ -13,7 +13,7 @@ The main objective of this software is to generate synthesized views enabling 6D
   - [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
   - [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
   - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
-- [Usage](#usage)
+- [Usage](#usage)[^2]
   - [Building and dependencies](#building-and-dependencies)
   - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
   - [Command line parameters](#command-line-parameters)
@@ -29,7 +29,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Example of view synthesis using RVS on «ClassroomVideo»
 
-**Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**[^3]
+**Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
   <img src="./Figures/A01-groundTruth.png" alt="Ground Truth" style="width: 45%; margin: 5px;">
   <img src="./Figures/A01-openGL.png" alt="OpenGL" style="width: 45%; margin: 5px;">
@@ -129,7 +129,6 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 
 #### View Synthesis Json parameters
 
-[^2]
 | Name                     | Value       | Description |
 |:-------------------------|:------------|:------------|
 |Version                   | string      | version number |
