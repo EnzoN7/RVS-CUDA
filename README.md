@@ -6,12 +6,16 @@ This new version of «RVS - Reference View Synthesizer»[^1] was developed as pa
 
 The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras arranged in an orderly manner, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
 
+## Figure: Example of View Synthesis using RVS on «ClassroomVideo»
+
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
   <img src="./Figures/A01-groundTruth.png" alt="Ground Truth" style="width: 45%; margin: 5px;">
   <img src="./Figures/A01-openGL.png" alt="OpenGL" style="width: 45%; margin: 5px;">
   <img src="./Figures/A01-openCV.png" alt="OpenCV (CPU)" style="width: 45%; margin: 5px;">
   <img src="./Figures/A01-CUDA.png" alt="CUDA" style="width: 45%; margin: 5px;">
 </div>
+
+**Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**
 
 ## Usage [^2]
 
