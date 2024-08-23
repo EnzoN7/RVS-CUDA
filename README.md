@@ -68,7 +68,7 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 #### Example
 
 ```bash
-/pathToBuildFolder/Release/RVS.exe /Config/RVS-A01.json [--cuda | --OpenGL]
+/pathToBuildFolder/Release/RVS.exe /Config/RVS-A01.json [--cuda | --opengl]
 ```
 
 #### General parameters
