@@ -67,16 +67,28 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/rvs/CMakeLists.txt``` file according to your NVIDIA GPU architecture.
 
-| Architecture       | Compute Capabilities |
-|-------------------|---------------------|
-| **Kepler**        | 30, 32, 35, 37      |
-| **Maxwell**       | 50, 52, 53          |
-| **Pascal**        | 60, 61, 62          |
-| **Volta**         | 70, 72              |
-| **Turing**        | 75                  |
-| **Ampere**        | 80, 86              |
-| **Ada Lovelace**  | 89                  |
-| **Hopper**        | 90                  |
+### CUDA Architectures and Corresponding Compute Capabilities
+
+| Compute Capability | Architecture       | Example GPUs                          |
+|--------------------|-------------------|---------------------------------------|
+| **30**             | Kepler            | GTX 780, Tesla K20                    |
+| **32**             | Kepler            | Tegra K1                              |
+| **35**             | Kepler            | Tesla K40, GTX 770                    |
+| **37**             | Kepler            | Tesla K80                             |
+| **50**             | Maxwell           | GTX 750, GTX 750 Ti                   |
+| **52**             | Maxwell           | GTX 970, GTX 980                      |
+| **53**             | Maxwell           | Tegra X1                              |
+| **60**             | Pascal            | GTX 1080, GTX 1070                    |
+| **61**             | Pascal            | GTX 1050, GTX 1060                    |
+| **62**             | Pascal            | Jetson TX2                            |
+| **70**             | Volta             | Tesla V100                            |
+| **72**             | Volta             | Xavier AGX, Jetson AGX                |
+| **75**             | Turing            | RTX 2060, RTX 2070, RTX 2080          |
+| **80**             | Ampere            | A100, RTX 3090, RTX 3080              |
+| **86**             | Ampere            | RTX 3060, RTX 3070, RTX 3080 Ti       |
+| **89**             | Ada Lovelace      | RTX 4090, RTX 4080                    |
+| **90**             | Hopper            | H100, Hopper GPUs                     |
+
 
 ### Command line parameters
 
