@@ -17,12 +17,12 @@ The main objective of this software is to generate synthesized views enabling 6D
 - [Usage](#usage)[^2]
   - [How to build RVS-CUDA](#how-to-build-rvs-cuda)
   - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
+  - [Suggested project organization](#suggested-project-organization)
   - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
     - [Formatting the command line](#formatting-the-command-line)
     - [View synthesis JSON parameters](#view-synthesis-json-parameters)
     - [Camera JSON parameters](#camera-json-parameters)
     - [Differences from the initial version](#differences-from-the-initial-version)
-  - [Suggested project organization](#suggested-project-organization)
 - [Author of RVS-CUDA](#author-of-rvs-cuda)
 - [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
 - [License of the initial RVS software](#license-of-the-initial-rvs-software)
@@ -110,6 +110,26 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 | **89**             | Ada Lovelace      | RTX 4090, RTX 4080                    |
 | **90**             | Hopper            | H100, Hopper GPUs                     |
 
+### Suggested project organization
+
+- Build/
+  - Release/
+    - RVS.exe
+- Config/
+  - RVS-A01.json
+  - A01.json
+  - PoseTrace.csv
+- Content/
+  - A01/
+    - *.yuv
+- Experiment/
+  - A01/
+    - *.yuv
+- rvs/
+  - src/
+- rvs_cuda_lib/
+  - src/
+
 
 ### How to run RVS-CUDA
 
@@ -174,26 +194,6 @@ cd RVS-CUDA/Build/
 * The blending method is always set to «Simple».
 * The input files have an «Equirectangular» projection type.
 * The output files are YUV texture files.
-
-### Suggested project organization
-
-- Build/
-  - Release/
-    - RVS.exe
-- Config/
-  - RVS-A01.json
-  - A01.json
-  - PoseTrace.csv
-- Content/
-  - A01/
-    - *.yuv
-- Experiment/
-  - A01/
-    - *.yuv
-- rvs/
-  - src/
-- rvs_cuda_lib/
-  - src/
 
 ## Author of RVS-CUDA
 
