@@ -16,9 +16,10 @@ The main objective of this software is to generate synthesized views enabling 6D
   - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
 - [Usage](#usage)[^2]
   - [How to build RVS-CUDA](#how-to-build-rvs-cuda)
-  - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
-  - [Suggested project organization](#suggested-project-organization)
-  - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
+    - [Dependencies](#dependencies)
+    - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
+    - [Suggested project organization](#suggested-project-organization)
+    - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
     - [Formatting the command line](#formatting-the-command-line)
     - [View synthesis JSON parameters](#view-synthesis-json-parameters)
     - [Camera JSON parameters](#camera-json-parameters)
@@ -77,16 +78,16 @@ Tested on RTX A4500.
 
 ### How to build RVS-CUDA
 
-Build with CMake (file: ```/CMakeLists.txt```).
+#### Dependencies
 
-Dependencies:
+Build with CMake (file: ```/CMakeLists.txt```).
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [glm (tested on v1.0.0)](https://github.com/g-truc/glm)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 * [CUDA (tested on v12.4)](https://developer.nvidia.com/cuda-12-4-0-download-archive)
 
-### CUDA architectures and corresponding compute capabilities
+#### CUDA architectures and corresponding compute capabilities
 
 Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` file according to your NVIDIA GPU architecture[^9].
 
@@ -110,7 +111,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 | **89**             | Ada Lovelace      | RTX 4090, RTX 4080                    |
 | **90**             | Hopper            | H100, Hopper GPUs                     |
 
-### Suggested project organization
+#### Suggested project organization
 
 - Build/
   - Release/
