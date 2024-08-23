@@ -27,9 +27,9 @@ The main objective of this software is to generate synthesized views enabling 6D
 - [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
 - [License of the initial RVS software](#license-of-the-initial-rvs-software)
 
-## Example of view synthesis using RVS on «ClassroomVideo»[^3]
+## Example of view synthesis using RVS on «ClassroomVideo»
 
-**Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**
+**Order of reading: Ground Truth, OpenGL, OpenCV, CUDA**[^3]
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
   <img src="./Figures/A01-groundTruth.png" alt="Ground Truth" style="width: 45%; margin: 5px;">
   <img src="./Figures/A01-openGL.png" alt="OpenGL" style="width: 45%; margin: 5px;">
@@ -73,7 +73,7 @@ Tested on RTX A4500.
 | **OpenGL**| Y: 22.28, U: 41.56, V: 45.43         | 30.54       | Y: 0.9012, U: 0.9845, V: 0.9926       |
 | **CUDA**  | Y: 23.28, U: 43.22, V: 46.98         | 31.76       | Y: 0.9240, U: 0.9882, V: 0.9944       |
 
-## Usage[^2]
+## Usage
 
 ### Building and dependencies
 
@@ -129,6 +129,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 
 #### View Synthesis Json parameters
 
+[^2]
 | Name                     | Value       | Description |
 |:-------------------------|:------------|:------------|
 |Version                   | string      | version number |
