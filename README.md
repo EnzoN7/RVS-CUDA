@@ -6,7 +6,8 @@ This new version of «RVS - Reference View Synthesizer»[^1] was developed as pa
 
 The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras arranged in an orderly manner, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
 
-## Table of Contents
+## Table of contents
+
 - [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
 - [Quality and performance](#quality-and-performance)
   - [Comparison of time for producing a «Perspective» type image](#comparison-of-time-for-producing-a-perspective-type-image)
@@ -14,13 +15,12 @@ The main objective of this software is to generate synthesized views enabling 6D
   - [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
   - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
 - [Usage](#usage)[^2]
-  - [Building and dependencies](#building-and-dependencies)
+  - [How to build RVS-CUDA](#how-to-build-rvs-cuda)
   - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
-  - [Command line parameters](#command-line-parameters)
-    - [Formatting](#formatting)
-    - [General parameters](#general-parameters)
-    - [View Synthesis Json parameters](#view-synthesis-json-parameters)
-    - [Camera Json parameters](#camera-json-parameters)
+  - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
+    - [Formatting the command line](#formatting-the-command-line)
+    - [View synthesis JSON parameters](#view-synthesis-json-parameters)
+    - [Camera JSON parameters](#camera-json-parameters)
     - [Differences from the initial version](#differences-from-the-initial-version)
   - [Suggested project organization](#suggested-project-organization)
 - [Author of RVS-CUDA](#author-of-rvs-cuda)
@@ -75,19 +75,20 @@ Tested on RTX A4500.
 
 ## Usage
 
-### Building and dependencies
+### How to build RVS-CUDA
 
 Build with CMake (file: ```/CMakeLists.txt```).
 
+Dependencies:
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [glm (tested on v1.0.0)](https://github.com/g-truc/glm)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 * [CUDA (tested on v12.4)](https://developer.nvidia.com/cuda-12-4-0-download-archive)
 
-### CUDA architectures and corresponding compute capabilities[^9]
+### CUDA architectures and corresponding compute capabilities
 
-Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` file according to your NVIDIA GPU architecture.
+Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` file according to your NVIDIA GPU architecture[^9].
 
 | Compute Capability | Architecture       | Example GPUs                          |
 |--------------------|-------------------|---------------------------------------|
@@ -103,23 +104,21 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 | **62**             | Pascal            | Jetson TX2                            |
 | **70**             | Volta             | Tesla V100                            |
 | **72**             | Volta             | Xavier AGX, Jetson AGX                |
-| **75**             | Turing            | RTX 2060, RTX 2070, RTX 2080          |
+| **75**             | Turing            | RTX 2060, RTX 2070, RTX 2080, GTX 1660|
 | **80**             | Ampere            | A100, RTX 3090, RTX 3080              |
 | **86**             | Ampere            | RTX 3060, RTX 3070, RTX 3080 Ti       |
 | **89**             | Ada Lovelace      | RTX 4090, RTX 4080                    |
 | **90**             | Hopper            | H100, Hopper GPUs                     |
 
 
-### Command line parameters
+### How to run RVS-CUDA
 
-#### Formatting
+#### Formatting the command line
 
 ```bash
 cd RVS-CUDA/
 ./Build/Release/RVS.exe "./Config/RVS-{Sequence}.json" [--cuda | --opengl]
 ```
-
-#### General parameters
 
 | Cmd | Description |
 |:----|:------------|
