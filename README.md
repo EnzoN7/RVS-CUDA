@@ -129,7 +129,7 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 * The output files are YUV texture files.
 
 
-## Author of the RVS-CUDA
+## Author of RVS-CUDA
 
 Enzo Di Maria, Double Master's Student:
 * École de Technologie Supérieure, Montréal, Canada[^7]
