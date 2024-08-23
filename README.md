@@ -63,6 +63,19 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 * [glm (tested on v1.0.0)](https://github.com/g-truc/glm)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 
+### CUDA architectures and corresponding compute capabilities[^9]
+
+| Architecture       | Compute Capabilities |
+|-------------------|---------------------|
+| **Kepler**        | 30, 32, 35, 37      |
+| **Maxwell**       | 50, 52, 53          |
+| **Pascal**        | 60, 61, 62          |
+| **Volta**         | 70, 72              |
+| **Turing**        | 75                  |
+| **Ampere**        | 80, 86              |
+| **Ada Lovelace**  | 89                  |
+| **Hopper**        | 90                  |
+
 ### Command line parameters
 
 #### Example
@@ -143,6 +156,7 @@ Enzo Di Maria, Double Master's Student:
 [^6]: Wang, Z., Bovik, A. C., Sheikh, H. R., & Simoncelli, E. P. (2004). Image Quality Assessment: From Error Visibility to Structural Similarity. IEEE Transactions on Image Processing, 13(4), 600–612. https://doi.org/10.1109/TIP.2003.819861.
 [^7]: ÉTS, https://www.etsmtl.ca
 [^8]: ENSEEIHT, https://www.enseeiht.fr/fr/index.html
+[^9]: CUDA GPUs, Your GPU Compute Capability, https://developer.nvidia.com/cuda-gpus
 
 ## Authors of the initial RVS software
 
