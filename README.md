@@ -131,7 +131,9 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 ## Author
 
-* Enzo Di Maria, École de Technologie Supérieure, Montréal, Canada
+Enzo Di Maria
+* École de Technologie Supérieure, Montréal, Canada
+* ENSEEIHT, Toulouse, France
 
 ## References
 
