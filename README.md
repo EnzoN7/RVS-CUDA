@@ -116,8 +116,8 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 #### Formatting the command line
 
 ```bash
-cd RVS-CUDA/
-./Build/Release/RVS.exe "./Config/RVS-{Sequence}.json" [--cuda | --opengl]
+cd RVS-CUDA/Build
+./Release/RVS.exe "../Config/RVS-{Sequence}.json" [--cuda | --opengl]
 ```
 
 | Cmd | Description |
