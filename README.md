@@ -56,7 +56,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ### Building and dependencies
 
-Build with CMake (file: ./rvs/CMakeLists.txt).
+Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
@@ -68,7 +68,7 @@ Build with CMake (file: ./rvs/CMakeLists.txt).
 #### Example
 
 ```bash
-./pathToBuildFolder/Release/RVS.exe ./Config/RVS-A01.json [--cuda | --OpenGL]
+/pathToBuildFolder/Release/RVS.exe /Config/RVS-A01.json [--cuda | --OpenGL]
 ```
 
 #### General parameters
@@ -79,25 +79,6 @@ Build with CMake (file: ./rvs/CMakeLists.txt).
 |     | default version: CPU |
 | --cuda | using CUDA speedup |
 | --opengl | using OpenGL speedup |
-
-#### Camera Json parameters
-
-| Name         | Value         | Description |
-|:-------------|:--------------|:------------|
-|Name		   | string		   | camera name |
-|Position      | float 3  	   | position (front,left,up) |
-|Rotation      | float 3       | rotation (yaw,pitch,roll) |
-|Depthmap      | int           | has a depth |
-|Depth_range   | float 2       | min and max depth |
-|DisplacementMethod| string    | Depth |
-|Resolution    | int 2    	   | resolution (pixel) |
-|Projection    | string        | perspective or equirectangular |
-|Focal         | float 2       | focal (pixel) |
-|Principle_point| float 2      | principle point (pixel) |
-|BitDepthColor | int           | color bit depth |
-|BitDepthDepth | int           | depth map bit depth |
-|ColorSpace    | string        | YUV420 |
-|DepthColorSpace| string       | YUV420 |
 
 #### View Synthesis Json parameters
 
@@ -119,6 +100,25 @@ Build with CMake (file: ./rvs/CMakeLists.txt).
 |ViewSynthesisMethod       | string      | Triangles |
 |BlendingMethod            | string      | Simple |
 |BlendingFactor            | float       | factor in the blending |
+
+#### Camera Json parameters
+
+| Name         | Value         | Description |
+|:-------------|:--------------|:------------|
+|Name		   | string		   | camera name |
+|Position      | float 3  	   | position (front,left,up) |
+|Rotation      | float 3       | rotation (yaw,pitch,roll) |
+|Depthmap      | int           | has a depth |
+|Depth_range   | float 2       | min and max depth |
+|DisplacementMethod| string    | Depth |
+|Resolution    | int 2    	   | resolution (pixel) |
+|Projection    | string        | perspective or equirectangular |
+|Focal         | float 2       | focal (pixel) |
+|Principle_point| float 2      | principle point (pixel) |
+|BitDepthColor | int           | color bit depth |
+|BitDepthDepth | int           | depth map bit depth |
+|ColorSpace    | string        | YUV420 |
+|DepthColorSpace| string       | YUV420 |
 
 #### Differences from the initial version
 
