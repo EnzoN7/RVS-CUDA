@@ -19,7 +19,7 @@ The main objective of this software is to generate synthesized views enabling 6D
     - [Dependencies](#dependencies)
     - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
     - [Suggested project organization](#suggested-project-organization)
-    - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
+  - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
     - [Formatting the command line](#formatting-the-command-line)
     - [View synthesis JSON parameters](#view-synthesis-json-parameters)
     - [Camera JSON parameters](#camera-json-parameters)
