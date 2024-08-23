@@ -131,7 +131,7 @@ Build with CMake (file: ```/rvs/CMakeLists.txt```).
 
 ## Author
 
-Enzo Di Maria
+Enzo Di Maria, Double Master's Student:
 * École de Technologie Supérieure, Montréal, Canada
 * ENSEEIHT, Toulouse, France
 
