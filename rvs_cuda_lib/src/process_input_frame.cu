@@ -2,9 +2,23 @@
 #include <iostream>
 #include <opencv2/imgproc.hpp>
 
-// Resize UV
-//
+/**
+* Auteur : Enzo DI MARIA
+*/
 
+/**
+ * @brief CUDA kernel that resizes UV components of an image using bilinear interpolation.
+ *
+ * @param uInput Pointer to the U component input data.
+ * @param vInput Pointer to the V component input data.
+ * @param uOutput Pointer to the resized U component output data.
+ * @param vOutput Pointer to the resized V component output data.
+ * @param inputWidth Width of the input UV image.
+ * @param inputHeight Height of the input UV image.
+ * @param outputWidth Width of the output UV image.
+ * @param outputHeight Height of the output UV image.
+ * @param type The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the input data.
+ */
 __global__ void resizeUV(void* uInput, void* vInput, float* uOutput, float* vOutput, int inputWidth, int inputHeight, int outputWidth, int outputHeight, int type)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -66,6 +80,18 @@ __global__ void resizeUV(void* uInput, void* vInput, float* uOutput, float* vOut
     }
 }
 
+/**
+ * @brief Resizes the UV channels of an image using CUDA and stores the output on the device.
+ *
+ * @param inputs Array of cv::Mat containing the input U and V channels.
+ * @param devUOutput Pointer to the device memory where the resized U channel will be stored.
+ * @param devVOutput Pointer to the device memory where the resized V channel will be stored.
+ * @param size The desired output size of the UV channels.
+ * @param type The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the input data.
+ *
+ * @throws std::invalid_argument If the input type is not supported.
+ * @throws std::runtime_error If a CUDA error occurs.
+ */
 void resizeImage(cv::Mat inputs[], float*& devUOutput, float*& devVOutput, cv::Size size, int type)
 {
     void* devUInput;
@@ -117,9 +143,17 @@ void resizeImage(cv::Mat inputs[], float*& devUOutput, float*& devVOutput, cv::S
     }
 }
 
-// Resize Y
-//
-
+/**
+ * @brief CUDA kernel that resizes the Y component of an image using bilinear interpolation.
+ *
+ * @param yInput Pointer to the Y component input data.
+ * @param yOutput Pointer to the resized Y component output data.
+ * @param inputWidth Width of the input Y image.
+ * @param inputHeight Height of the input Y image.
+ * @param outputWidth Width of the output Y image.
+ * @param outputHeight Height of the output Y image.
+ * @param type The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the input data.
+ */
 __global__ void resizeY(void* yInput, float* yOutput, int inputWidth, int inputHeight, int outputWidth, int outputHeight, int type)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -162,11 +196,18 @@ __global__ void resizeY(void* yInput, float* yOutput, int inputWidth, int inputH
     }
 }
 
-
-// Merge
-//
-
-
+/**
+ * @brief CUDA kernel that merges the Y, U, and V channels into a single float3 buffer.
+ *
+ * @param yChannel Pointer to the Y component data.
+ * @param uChannel Pointer to the U component data.
+ * @param vChannel Pointer to the V component data.
+ * @param yuvChannels Pointer to the output float3 buffer containing the merged YUV channels.
+ * @param width Width of the image.
+ * @param height Height of the image.
+ * @param colorScale The scaling factor applied to the color values.
+ * @param type The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the Y component.
+ */
 __global__ void mergeYUV(const void* yChannel, const float* uChannel, const float* vChannel, float3* yuvChannels, int width, int height, float colorScale, int type)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -196,6 +237,20 @@ __global__ void mergeYUV(const void* yChannel, const float* uChannel, const floa
     }
 }
 
+/**
+ * @brief Merges the Y, U, and V channels of an image and stores the output on the device.
+ *
+ * @param yInput The input cv::Mat containing the Y channel.
+ * @param devU Pointer to the device memory containing the U channel.
+ * @param devV Pointer to the device memory containing the V channel.
+ * @param devYUV Pointer to the device memory where the merged YUV data will be stored.
+ * @param outputSize The desired output size.
+ * @param yType The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the Y channel.
+ * @param colorScale The scaling factor applied to the color values.
+ *
+ * @throws std::invalid_argument If the input type is not supported.
+ * @throws std::runtime_error If a CUDA error occurs.
+ */
 void mergeFrame(cv::Mat& yInput, float* devU, float* devV, float3*& devYUV, cv::Size outputSize, int yType, float colorScale)
 {
     int width = outputSize.width;
@@ -275,9 +330,19 @@ void mergeFrame(cv::Mat& yInput, float* devU, float* devV, float3*& devYUV, cv::
     }
 }
 
-// Format depth
-//
-
+/**
+ * @brief CUDA kernel that normalizes and converts depth values based on near and far plane distances.
+ *
+ * @param src Pointer to the input depth data.
+ * @param dst Pointer to the output normalized depth data.
+ * @param scale Scaling factor for the depth values.
+ * @param near Near plane distance.
+ * @param far Far plane distance.
+ * @param rows Number of rows in the image.
+ * @param cols Number of columns in the image.
+ * @param type The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the input data.
+ * @param hasInvalidDepth Whether the depth data contains invalid values that should be set to NaN.
+ */
 __global__ void normalize(void* src, float* dst, float scale, float near, float far, int rows, int cols, int type, bool hasInvalidDepth)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -319,6 +384,21 @@ __global__ void normalize(void* src, float* dst, float scale, float near, float 
     }
 }
 
+/**
+ * @brief Normalizes and resizes depth data, handling different OpenCV data types and storing the output on the device.
+ *
+ * @param src The input cv::Mat containing the depth data.
+ * @param devDst Pointer to the device memory where the normalized depth data will be stored.
+ * @param size The desired output size.
+ * @param scale Scaling factor for the depth values.
+ * @param near Near plane distance.
+ * @param far Far plane distance.
+ * @param hasInvalidDepth Whether the depth data contains invalid values that should be set to NaN.
+ * @param type The OpenCV data type (e.g., CV_32F, CV_16U, CV_8U) of the input data.
+ *
+ * @throws std::invalid_argument If the input type is not supported.
+ * @throws std::runtime_error If a CUDA error occurs.
+ */
 void formatDepth(cv::Mat& src, float*& devDst, cv::Size size, float scale, float near, float far, bool hasInvalidDepth, int type)
 {
     int rows = size.height;
@@ -386,9 +466,16 @@ void formatDepth(cv::Mat& src, float*& devDst, cv::Size size, float scale, float
     }
 }
 
-// Process output frame
-//
-
+/**
+ * @brief CUDA kernel that separates Y, U, and V channels from a float3 buffer into individual channels.
+ *
+ * @param src Pointer to the input float3 buffer containing YUV data.
+ * @param Y Pointer to the output Y channel buffer.
+ * @param U Pointer to the output U channel buffer.
+ * @param V Pointer to the output V channel buffer.
+ * @param rows Number of rows in the image.
+ * @param cols Number of columns in the image.
+ */
 __global__ void separateChannelsKernel(float3* src, float* Y, float* U, float* V, int rows, int cols)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -405,6 +492,16 @@ __global__ void separateChannelsKernel(float3* src, float* Y, float* U, float* V
     }
 }
 
+/**
+ * @brief CUDA kernel that performs quantization of float data into different OpenCV types.
+ *
+ * @param src Pointer to the input float data.
+ * @param dst Pointer to the output quantized data (device memory).
+ * @param rows Number of rows in the image.
+ * @param cols Number of columns in the image.
+ * @param cv_depth The target OpenCV data type (e.g., CV_8U, CV_16U, CV_32F).
+ * @param max_val The maximum value used for quantization.
+ */
 __global__ void quantizationKernel(float* src, void* dst, int rows, int cols, int cv_depth, unsigned max_val)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -430,6 +527,22 @@ __global__ void quantizationKernel(float* src, void* dst, int rows, int cols, in
     }
 }
 
+/**
+ * @brief Performs quantization of YUV channels, resizing as needed, and stores the output in the provided cv::Mat.
+ *
+ * @param devSrc Pointer to the device memory containing the input YUV data as a float3 buffer.
+ * @param dstY cv::Mat to store the quantized Y channel.
+ * @param dstU cv::Mat to store the quantized U channel.
+ * @param dstV cv::Mat to store the quantized V channel.
+ * @param rows Number of rows in the input YUV data.
+ * @param cols Number of columns in the input YUV data.
+ * @param outputSize The desired output size.
+ * @param cv_depth The target OpenCV data type (e.g., CV_8U, CV_16U, CV_32F).
+ * @param max_val The maximum value used for quantization.
+ *
+ * @throws std::invalid_argument If the input type is not supported.
+ * @throws std::runtime_error If a CUDA error occurs.
+ */
 void quantization(float3* devSrc, cv::Mat& dstY, cv::Mat& dstU, cv::Mat& dstV, int rows, int cols, cv::Size outputSize, int cv_depth, unsigned max_val)
 {
     size_t dstSizeY, dstSizeUV;

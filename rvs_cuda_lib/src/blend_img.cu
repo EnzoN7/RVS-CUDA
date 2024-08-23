@@ -1,5 +1,12 @@
 #include "blend_img.cuh"
 
+/**
+* Auteur : Enzo DI MARIA
+*/
+
+/**
+ * @brief A structure to hold constant parameters used in the blending process.
+ */
 struct ConstantParams
 {
     float blendingExponent;
@@ -9,23 +16,60 @@ struct ConstantParams
     float3 emptyColor;
 };
 
+/**
+ * @brief Holds the constant parameters used during the blending process.
+ */
 __constant__ ConstantParams constParams;
 
+/**
+ * @brief Overloads the multiplication operator for a float3 structure with a scalar.
+ *
+ * @param a Scalar value.
+ * @param b float3 structure.
+ * @return A new float3 structure with each component multiplied by the scalar.
+ */
 __device__ float3 operator*(float a, float3 b)
 {
     return make_float3(a * b.x, a * b.y, a * b.z);
 }
 
+/**
+ * @brief Overloads the addition operator for two float3 structures.
+ *
+ * @param a First float3 structure.
+ * @param b Second float3 structure.
+ * @return A new float3 structure representing the component-wise sum of the inputs.
+ */
 __device__ float3 operator+(float3 a, float3 b)
 {
     return make_float3(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
+/**
+ * @brief Overloads the division operator for a float3 structure by a scalar.
+ *
+ * @param a float3 structure.
+ * @param b Scalar value.
+ * @return A new float3 structure with each component divided by the scalar.
+ */
 __device__ float3 operator/(float3 a, float b)
 {
     return make_float3(a.x / b, a.y / b, a.z / b);
 }
 
+/**
+ * @brief CUDA kernel that blends multiple images together based on depth and validity information.
+ *
+ * @param blendedColor Pointer to the blended color input.
+ * @param blendedValidity Pointer to the blended validity input.
+ * @param blendedDepth Pointer to the blended depth input.
+ * @param devColor Pointer to the current image color input.
+ * @param devValidity Pointer to the current image validity input.
+ * @param devDepth Pointer to the current image depth input.
+ * @param outputColor Pointer to the output color buffer.
+ * @param outputValidity Pointer to the output validity buffer.
+ * @param outputDepth Pointer to the output depth buffer.
+ */
 __global__ void blendImagesKernel
 (
     float3* blendedColor, float* blendedValidity, float* blendedDepth,
@@ -102,6 +146,24 @@ __global__ void blendImagesKernel
     }
 }
 
+/**
+ * @brief Blends two images together using CUDA based on their depth and validity information.
+ *
+ * @param devBlendedColor Pointer to the device memory containing the first image's color data.
+ * @param devBlendedValidity Pointer to the device memory containing the first image's validity data.
+ * @param devBlendedDepth Pointer to the device memory containing the first image's depth data.
+ * @param devColor Pointer to the device memory containing the second image's color data.
+ * @param devValidity Pointer to the device memory containing the second image's validity data.
+ * @param devDepth Pointer to the device memory containing the second image's depth data.
+ * @param outputSize The size of the output image.
+ * @param emptyColor The color used for empty pixels (output when no valid color is found).
+ * @param devOutputColor Pointer to the device memory where the output color data will be stored.
+ * @param devOutputValidity Pointer to the device memory where the output validity data will be stored.
+ * @param devOutputDepth Pointer to the device memory where the output depth data will be stored.
+ * @param blendingExponent The exponent used to adjust the blending quality.
+ *
+ * @throws std::runtime_error If a CUDA error occurs.
+ */
 void blendImages
 (
     float3* devBlendedColor, float* devBlendedValidity, float* devBlendedDepth,

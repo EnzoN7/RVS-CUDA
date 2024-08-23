@@ -1,6 +1,10 @@
 #include "unproject_project.cuh"
 
 /**
+* Auteur : Enzo DI MARIA
+*/
+
+/**
  * @brief A constant structure to hold the dimensions of the image (or the grid) being processed.
  */
 __constant__ int imgDim[2];

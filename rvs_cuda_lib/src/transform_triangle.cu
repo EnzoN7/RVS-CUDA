@@ -6,22 +6,21 @@
 */
 
 /**
- * @brief A constant structure to hold the dimensions of the image (or the grid) being processed.
+ * @brief Holds the dimensions (width and height) of the input image as a constant array.
  */
 __constant__ int imgDim[2];
 
 /**
-* @brief  A constant structure to hold the desired size of the output color and depth images.
-*/
+ * @brief Holds the dimensions (width and height) of the output image as a constant array.
+ */
 __constant__ int outputImgDim[2];
 
 /**
- * @brief Computes the squared Euclidean distance between two points in 2D space.
+ * @brief Performs a dot product of two 2D float vectors.
  *
- * @param p1 First point as a float2 containing the x and y coordinates.
- * @param p2 Second point as a float2 containing the x and y coordinates.
- *
- * @return The squared distance between p1 and p2.
+ * @param p1 The first 2D vector.
+ * @param p2 The second 2D vector.
+ * @return The squared distance between the two vectors.
  */
 __device__ inline float dot(float2 p1, float2 p2)
 {
@@ -31,13 +30,12 @@ __device__ inline float dot(float2 p1, float2 p2)
 }
 
 /**
- * @brief Evaluates the validity of a triangle based on the lengths of its sides.
+ * @brief Evaluates the validity of a triangle based on the positions of its vertices.
  *
- * @param posA The position of the first vertex of the triangle.
- * @param posB The position of the second vertex of the triangle.
- * @param posC The position of the third vertex of the triangle.
- *
- * @return A quality score for the triangle, ranging from 1 to 10000.
+ * @param posA Position of the first vertex.
+ * @param posB Position of the second vertex.
+ * @param posC Position of the third vertex.
+ * @return A validity score for the triangle, ranging from 1 to 10,000.
  */
 __device__ inline float isTriValid(float2 posA, float2 posB, float2 posC)
 {
@@ -50,18 +48,31 @@ __device__ inline float isTriValid(float2 posA, float2 posB, float2 posC)
     return fminf(10000.f, fmaxf(1.f, quality));
 }
 
+/**
+ * @brief Holds depth and validity data.
+ */
 struct DepthAndValidity
 {
     float depth;
     float validity;
 };
 
+/**
+ * @brief A union for encoding and decoding depth and validity data as a single 64-bit integer.
+ */
 union DepthAndValidityUnion
 {
     DepthAndValidity dv;
     unsigned long long int encoded;
 };
 
+/**
+ * @brief Encodes depth and validity data into a single 64-bit integer.
+ *
+ * @param depth The depth value.
+ * @param validity The validity score.
+ * @return The encoded 64-bit integer.
+ */
 __device__ unsigned long long int encodeDepthAndValidity(float depth, float validity)
 {
     DepthAndValidityUnion u;
@@ -70,6 +81,12 @@ __device__ unsigned long long int encodeDepthAndValidity(float depth, float vali
     return u.encoded;
 }
 
+/**
+ * @brief Decodes a 64-bit integer into depth and validity data.
+ *
+ * @param encoded The encoded 64-bit integer.
+ * @return A DepthAndValidity structure containing the depth and validity data.
+ */
 __device__ DepthAndValidity decodeDepthAndValidity(unsigned long long int encoded)
 {
     DepthAndValidityUnion u;
@@ -78,25 +95,23 @@ __device__ DepthAndValidity decodeDepthAndValidity(unsigned long long int encode
 }
 
 /**
- * @brief Processes a single pixel within a triangle, updating color and depth based on barycentric coordinates.
+ * @brief Processes a pixel within a triangle and updates the output color and depth/validity data.
  *
- * @param px The x-coordinate of the pixel to process.
- * @param py The y-coordinate of the pixel to process.
- * @param invArea The precomputed inverse area of the triangle.
- * @param outputColor The global result buffer where the new color will be stored.
- * @param outputDepth The global buffer where the new depth will be stored.
- * @param quality The global buffer indicating the shape quality of the triangles.
- * @param validity The global buffer indicating the shape quality of the triangles.
- * @param triangleValidity The threshold for the validity of triangle shape updates.
+ * @param px The x-coordinate of the pixel.
+ * @param py The y-coordinate of the pixel.
+ * @param invArea The inverse of the triangle's area.
+ * @param outputColor The output color buffer.
+ * @param outputDepthValidity The output depth/validity buffer.
+ * @param triangleValidity The validity score of the triangle.
  * @param posA The position of the first vertex of the triangle.
  * @param posB The position of the second vertex of the triangle.
  * @param posC The position of the third vertex of the triangle.
- * @param colA The color of the first vertex of the triangle.
- * @param colB The color of the second vertex of the triangle.
- * @param colC The color of the third vertex of the triangle.
- * @param depA The depth of the first vertex of the triangle.
- * @param depB The depth of the second vertex of the triangle.
- * @param depC The depth of the third vertex of the triangle.
+ * @param colA The color of the first vertex.
+ * @param colB The color of the second vertex.
+ * @param colC The color of the third vertex.
+ * @param depA The depth of the first vertex.
+ * @param depB The depth of the second vertex.
+ * @param depC The depth of the third vertex.
  */
 __device__ void processPixel
 (
@@ -154,19 +169,19 @@ __device__ void processPixel
 }
 
 /**
- * @brief Processes a triangle to update colors and depths of its pixels.
+ * @brief Processes a triangle and updates the output color and depth/validity data for all pixels covered by the triangle.
  *
  * @param posA The position of the first vertex of the triangle.
  * @param posB The position of the second vertex of the triangle.
  * @param posC The position of the third vertex of the triangle.
- * @param colA The color of the first vertex of the triangle.
- * @param colB The color of the second vertex of the triangle.
- * @param colC The color of the third vertex of the triangle.
- * @param depA The depth of the first vertex of the triangle.
- * @param depB The depth of the second vertex of the triangle.
- * @param depC The depth of the third vertex of the triangle.
- * @param outputColor The global result buffer where the new color will be stored.
- * @param outputDepthValidity The global buffer where the new depth and validity will be stored.
+ * @param colA The color of the first vertex.
+ * @param colB The color of the second vertex.
+ * @param colC The color of the third vertex.
+ * @param depA The depth of the first vertex.
+ * @param depB The depth of the second vertex.
+ * @param depC The depth of the third vertex.
+ * @param outputColor The output color buffer.
+ * @param outputDepthValidity The output depth/validity buffer.
  */
 __device__ void processTriangle
 (
@@ -199,18 +214,14 @@ __device__ void processTriangle
 }
 
 /**
- * @brief CUDA kernel that colorizes triangles based on depth and position data.
+ * @brief CUDA kernel to colorize triangles in an image based on input depth, position, and color data.
  *
- * The kernel assumes that each thread corresponds to a single pixel, indexed by the 2D block and grid
- * dimensions. It uses shared constants 'imgDim' to represent image dimensions and 'isErp' to indicate if
- * equirectangular projection wrapping is required.
- *
- * @param inputColor The input image containing colors in YUV.
- * @param inputDepth The input image containing depth values.
- * @param inputPositions The positions of triangle vertices.
- * @param outputColor The global result buffer where the new color will be stored.
- * @param outputDepthValidity The global buffer where the new depth and validity will be stored.
- * @param horizontalWarping A boolean constant indicating if the image has a horizontal warping.
+ * @param inputColor The input color buffer.
+ * @param inputDepth The input depth buffer.
+ * @param inputPositions The input position buffer.
+ * @param outputColor The output color buffer.
+ * @param outputDepthValidity The output depth/validity buffer.
+ * @param horizontalWarping Whether horizontal warping is applied (used for edge wrapping).
  */
 __global__ void colorizeTriangleKernel(float3* inputColor, float* inputDepth, float2* inputPositions, float3* outputColor, unsigned long long int* outputDepthValidity, bool horizontalWarping)
 {
@@ -261,6 +272,14 @@ __global__ void colorizeTriangleKernel(float3* inputColor, float* inputDepth, fl
     }
 }
 
+/**
+ * @brief CUDA kernel to initialize an array with encoded depth and validity values.
+ *
+ * @param array The array to initialize.
+ * @param depth The depth value to encode.
+ * @param validity The validity value to encode.
+ * @param size The size of the array.
+ */
 __global__ void initializeArrayWithEncodedValues(unsigned long long int* array, float depth, float validity, int size)
 {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
@@ -270,6 +289,14 @@ __global__ void initializeArrayWithEncodedValues(unsigned long long int* array, 
     }
 }
 
+/**
+ * @brief CUDA kernel to separate encoded depth and validity data into separate output buffers.
+ *
+ * @param outputDepthValidity The input encoded depth/validity buffer.
+ * @param outputDepth The output depth buffer.
+ * @param validity The output validity buffer.
+ * @param size The size of the buffers.
+ */
 __global__ void separateDepthAndValidityKernel(unsigned long long int* outputDepthValidity, float* outputDepth, float* validity, int size)
 {
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
@@ -282,21 +309,20 @@ __global__ void separateDepthAndValidityKernel(unsigned long long int* outputDep
     }
 }
 
-
 /**
- * @brief Transforms triangles from the input image to the output image based on depth and position information.
+ * @brief Performs the transformation of triangles in an image, including colorization and depth/validity updates.
  *
- * @param inputColor Input color image as a 3-channel float matrix containing the YUV values.
- * @param inputDepth Input depth image as a single-channel float matrix containing depth values.
- * @param inputPositions Input positions image as a 2-channel float matrix containing the x and y coordinates.
- * @param outputSize The desired size of the output color and depth images.
- * @param baseDepth Base depth image as a single-channel float matrix.
- * @param baseValidity Base validity mask as a single-channel float matrix.
- * @param horizontalWrap A boolean flag indicating whether to process the image for horizontal wrapping.
- * @param devOutputColor Pointer to the output color buffer.
- * @param devOutputDepth Pointer to the output depth buffer.
- * @param devQuality Pointer to the quality buffer.
- * @param devValidity Pointer to the validity buffer.
+ * @param devInputColor The input color buffer (device memory).
+ * @param inputSize The size of the input image.
+ * @param devInputDepth The input depth buffer (device memory).
+ * @param devInputPositions The input position buffer (device memory).
+ * @param outputSize The size of the output image.
+ * @param horizontalWrap Whether horizontal wrapping is applied.
+ * @param devOutputColor The output color buffer (device memory).
+ * @param devOutputDepth The output depth buffer (device memory).
+ * @param devValidity The output validity buffer (device memory).
+ *
+ * @throws std::runtime_error If a CUDA error occurs.
  */
 void transform_trianglesMethod
 (
