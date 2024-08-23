@@ -18,7 +18,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Quality and performance
 
-| Sequence         | Input Views | CPU (ms) | OpenGL (ms) | CUDA (ms) | Speedup (CUDA / CPU) |
+| Sequence         | Input Views | CPU (ms) | OpenGL (ms) | CUDA (ms) | Speedup (CPU / CUDA) |
 |------------------|-------------|----------|-------------|-----------|---------------------|
 | ClassroomVideo  | 4           | 12870    | 1524        | **130.1** | 98.92               |
 | Museum           | 11          | 28252    | 2926        | **509.0** | 55.50               |
