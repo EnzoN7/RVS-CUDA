@@ -16,6 +16,59 @@ The main objective of this software is to generate synthesized views enabling 6D
   <img src="./Figures/A01-CUDA.png" alt="CUDA" style="width: 45%; margin: 5px;">
 </div>
 
+## Quality and performance
+
+| Sequence         | Input Views | CPU (ms) | OpenGL (ms) | CUDA (ms) | Speedup (CUDA / CPU) |
+|------------------|-------------|----------|-------------|-----------|---------------------|
+| ClassroomVideo  | 4           | 12870    | 1524        | **130.1** | 98.92               |
+| Museum           | 11          | 28252    | 2926        | **509.0** | 55.50               |
+| Chess            | 4           | 8034     | 1062        | **110.0** | 73.04               |
+
+### ClassroomVideo
+
+| Implementation    | WS-PSNR (dB)       | IV-PSNR (dB) | SSIM               |
+|-------------------|-------------------|-------------|-------------------|
+| **Version CPU**   | Y : 33.61         | 44.16       | Y : 0.8287        |
+|                   | U : 49.57         |             | U : 0.9913        |
+|                   | V : 52.21         |             | V : 0.9947        |
+| **Version OpenGL**| Y : 33.46         | 43.57       | Y : 0.8270        |
+|                   | U : 49.12         |             | U : 0.9906        |
+|                   | V : 51.79         |             | V : 0.9943        |
+| **Version CUDA**  | Y : 33.43         | 44.51       | Y : 0.8243        |
+|                   | U : 50.41         |             | U : 0.9929        |
+|                   | V : 52.79         |             | V : 0.9954        |
+
+
+### Museum
+
+| Implementation    | WS-PSNR (dB)       | IV-PSNR (dB) | SSIM               |
+|-------------------|-------------------|-------------|-------------------|
+| **Version CPU**   | Y : 30.30         | 37.74       | Y : 0.9131        |
+|                   | U : 38.84         |             | U : 0.9257        |
+|                   | V : 40.06         |             | V : 0.9439        |
+| **Version OpenGL**| Y : 29.42         | 36.36       | Y : 0.8989        |
+|                   | U : 38.65         |             | U : 0.9250        |
+|                   | V : 39.87         |             | V : 0.9434        |
+| **Version CUDA**  | Y : 30.09         | 37.71       | Y : 0.9085        |
+|                   | U : 38.04         |             | U : 0.9124        |
+|                   | V : 39.19         |             | V : 0.9333        |
+
+
+### Chess
+
+| Implementation    | WS-PSNR (dB)       | IV-PSNR (dB) | SSIM               |
+|-------------------|-------------------|-------------|-------------------|
+| **Version CPU**   | Y : 23.58         | 32.04       | Y : 0.9251        |
+|                   | U : 43.41         |             | U : 0.9889        |
+|                   | V : 46.91         |             | V : 0.9947        |
+| **Version OpenGL**| Y : 22.28         | 30.54       | Y : 0.9012        |
+|                   | U : 41.56         |             | U : 0.9845        |
+|                   | V : 45.43         |             | V : 0.9926        |
+| **Version CUDA**  | Y : 23.28         | 31.76       | Y : 0.9240        |
+|                   | U : 43.22         |             | U : 0.9882        |
+|                   | V : 46.98         |             | V : 0.9944        |
+
+
 ## Usage [^2]
 
 ### Commandline parameters
