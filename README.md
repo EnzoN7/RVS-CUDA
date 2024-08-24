@@ -32,6 +32,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 | <div align="center">Ground Truth</div> | <div align="center">OpenGL</div> |
 |--------------------------------------|-------------------------------|
 | ![Ground Truth](./Figures/A01-groundTruth.png) | ![OpenGL](./Figures/A01-openGL.png) |
+
 | <div align="center">OpenCV</div> | <div align="center">CUDA</div> |
 |--------------------------------------|-------------------------------|
 | ![OpenCV](./Figures/A01-openCV.png) | ![CUDA](./Figures/A01-CUDA.png) |
