@@ -31,24 +31,23 @@ The main objective of this software is to generate synthesized views enabling 6D
 ## Example of view synthesis using RVS on «ClassroomVideo»
 
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-  <div style="width: 45%; margin: 5px; text-align: center;">
-    <img src="./Figures/A01-groundTruth.png" alt="Ground Truth" style="width: 45%;">
+  <div style="flex: 0 0 45%; margin: 5px; text-align: center;">
+    <img src="./Figures/A01-groundTruth.png" alt="Ground Truth" style="width: 100%;">
     <p>Ground Truth</p>
   </div>
-  <div style="width: 45%; margin: 5px; text-align: center;">
-    <img src="./Figures/A01-openGL.png" alt="OpenGL" style="width: 45%;">
+  <div style="flex: 0 0 45%; margin: 5px; text-align: center;">
+    <img src="./Figures/A01-openGL.png" alt="OpenGL" style="width: 100%;">
     <p>OpenGL</p>
   </div>
-  <div style="width: 45%; margin: 5px; text-align: center;">
-    <img src="./Figures/A01-openCV.png" alt="OpenCV (CPU)" style="width: 45%;">
+  <div style="flex: 0 0 45%; margin: 5px; text-align: center;">
+    <img src="./Figures/A01-openCV.png" alt="OpenCV (CPU)" style="width: 100%;">
     <p>OpenCV (CPU)</p>
   </div>
-  <div style="width: 45%; margin: 5px; text-align: center;">
-    <img src="./Figures/A01-CUDA.png" alt="CUDA" style="width: 45%;">
+  <div style="flex: 0 0 45%; margin: 5px; text-align: center;">
+    <img src="./Figures/A01-CUDA.png" alt="CUDA" style="width: 100%;">
     <p>CUDA</p>
   </div>
 </div>
-
 
 ## Quality and performance
 
