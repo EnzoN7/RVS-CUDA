@@ -31,19 +31,13 @@ The main objective of this software is to generate synthesized views enabling 6D
 ## Example of view synthesis using RVS on «ClassroomVideo»
 
 Order of reading:
-* Ground Truth
-* OpenGL
-* OpenCV
-* CUDA
+| Ground Truth | OpenGL |
+| OpenCV | CUDA |
 <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
   <img src="./Figures/A01-groundTruth.png" alt="Ground Truth" style="width: 45%; margin: 5px;">
-  <p>Ground Truth</p>
   <img src="./Figures/A01-openGL.png" alt="OpenGL" style="width: 45%; margin: 5px;">
-  <p>OpenGL</p>
   <img src="./Figures/A01-openCV.png" alt="OpenCV (CPU)" style="width: 45%; margin: 5px;">
-  <p>OpenCV</p>
   <img src="./Figures/A01-CUDA.png" alt="CUDA" style="width: 45%; margin: 5px;">
-  <p>CUDA</p>
 </div>
 
 ## Quality and performance
