@@ -113,7 +113,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```CMakeLists.txt``` f
 #### Suggested project organization
 
 ```
-.
+RVS-CUDA/
 ├── Build/
 │   └── Release/
 │       └── RVS.exe
