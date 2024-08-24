@@ -79,7 +79,7 @@ Tested on RTX A4500.
 
 #### Dependencies
 
-Build with CMake (file: ```/CMakeLists.txt```).
+Build with CMake (file: ```CMakeLists.txt```).
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [glm (tested on v1.0.0)](https://github.com/g-truc/glm)
@@ -88,7 +88,7 @@ Build with CMake (file: ```/CMakeLists.txt```).
 
 #### CUDA architectures and corresponding compute capabilities
 
-Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` file according to your NVIDIA GPU architecture[^9].
+Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```CMakeLists.txt``` file according to your NVIDIA GPU architecture[^9].
 
 | Compute Capability | Architecture       | Example GPUs                          |
 |--------------------|-------------------|---------------------------------------|
@@ -121,10 +121,10 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
 │   ├── RVS-A01.json
 │   ├── A01.json
 │   └── PoseTrace.csv
-├── Content/
+├── Content/*
 │   └── A01/
 │       └── *.yuv
-├── Experiment/
+├── Experiment/**
 │   └── A01/
 │       └── *.yuv
 ├── rvs/
@@ -133,8 +133,8 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```/CMakeLists.txt``` 
     └── src/
 ```
 
-* ```Content``` folder = Input files
-* ```Experiment``` folder = Output files
+\* ```Content/``` folder = Input files
+\*\* ```Experiment/``` folder = Output files
 
 
 ### How to run RVS-CUDA
