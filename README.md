@@ -26,7 +26,6 @@ The main objective of this software is to generate synthesized views enabling 6D
     - [Differences from the initial version](#differences-from-the-initial-version)
 - [Author of RVS-CUDA](#author-of-rvs-cuda)
 - [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
-- [License of the initial RVS software](#license-of-the-initial-rvs-software)
 
 ## Example of view synthesis using RVS on «ClassroomVideo»
 
