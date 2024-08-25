@@ -118,14 +118,14 @@ RVS-CUDA/
 │   └── Release/
 │       └── RVS.exe
 ├── Config/
-│   ├── RVS-A01.json
-│   ├── A01.json
+│   ├── RVS-{sequence}.json
+│   ├── {sequence}.json
 │   └── PoseTrace.csv
 ├── Content/
-│   └── A01/
+│   └── {sequence}/
 │       └── *.yuv
 ├── Experiment/
-│   └── A01/
+│   └── {sequence}/
 │       └── *.yuv
 ├── rvs/
 │   └── src/
@@ -143,7 +143,7 @@ RVS-CUDA/
 
 ```bash
 cd RVS-CUDA/Build/
-./Release/RVS.exe "../Config/RVS-{Sequence}.json" [--cuda | --opengl]
+./Release/RVS.exe "../Config/RVS-{sequence}.json" [--cuda | --opengl]
 ```
 
 | Cmd | Description |
