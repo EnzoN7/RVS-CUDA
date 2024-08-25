@@ -9,26 +9,28 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 # Table of contents
 
-1. [RVS-CUDA](#rvs-cuda)
-    1. [Description](#description)
-    2. [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
-3. [Quality and performance](#quality-and-performance)
-    1. [Comparison of time for producing a «Perspective» type image](#comparison-of-time-for-producing-a-perspective-type-image)
-    2. [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
-    3. [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
-    4. [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
-4. [Usage](#usage)
-    1. [How to build RVS-CUDA](#how-to-build-rvs-cuda)
-        1. [Dependencies](#dependencies)
-        2. [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
-        3. [Suggested project organization](#suggested-project-organization)
-    2. [How to run RVS-CUDA](#how-to-run-rvs-cuda)
-    3. [How to configure RVS-CUDA](#how-to-configure-rvs-cuda)
-        1. [View synthesis *.json* parameters : ```RVS-{sequence}.json```](#view-synthesis-json-parameters--rvs-sequencejson)
-        2. [Camera *.json* parameters : ```{sequence}.json```](#camera-json-parameters--sequencejson)
-        3. [Differences from the initial version](#differences-from-the-initial-version)
-5. [Author of RVS-CUDA](#author-of-rvs-cuda)
-6. [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
+# Table of contents
+
+- [RVS-CUDA](#rvs-cuda)
+  - [Description](#description)
+  - [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
+- [Quality and performance](#quality-and-performance)
+  - [Comparison of time for producing a «Perspective» type image](#comparison-of-time-for-producing-a-perspective-type-image)
+  - [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
+  - [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
+  - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
+- [Usage](#usage)
+  - [How to build RVS-CUDA](#how-to-build-rvs-cuda)
+    - [Dependencies](#dependencies)
+    - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
+    - [Suggested project organization](#suggested-project-organization)
+  - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
+  - [How to configure RVS-CUDA](#how-to-configure-rvs-cuda)
+    - [View synthesis *.json* parameters : `RVS-{sequence}.json`](#view-synthesis-json-parameters--rvs-sequencejson)
+    - [Camera *.json* parameters : `{sequence}.json`](#camera-json-parameters--sequencejson)
+    - [Differences from the initial version](#differences-from-the-initial-version)
+- [Author of RVS-CUDA](#author-of-rvs-cuda)
+- [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
 
 ## Example of view synthesis using RVS on «ClassroomVideo»
 
