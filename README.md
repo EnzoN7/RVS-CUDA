@@ -8,9 +8,7 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Table of contents
 
-- [RVS-CUDA](#rvs-cuda)
-  - [Description](#description)
-  - [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
+- [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
 - [Quality and performance](#quality-and-performance)
   - [Comparison of time for producing a «Perspective» type image](#comparison-of-time-for-producing-a-perspective-type-image)
   - [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
