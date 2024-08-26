@@ -14,7 +14,7 @@ The main objective of this software is to generate synthesized views enabling 6D
   - [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
   - [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
   - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
-- [Usage](#usage)
+- [Usage[^2]](#usage)
   - [How to build RVS-CUDA](#how-to-build-rvs-cuda)
     - [Dependencies](#dependencies)
     - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
