@@ -127,10 +127,8 @@ RVS-CUDA/
 ├── Experiment/
 │   └── {sequence}/
 │       └── *.yuv
-├── rvs/
-│   └── src/
-└── rvs_cuda_lib/
-    └── src/
+├── rvs/src/
+└── rvs_cuda_lib/src/
 ```
 
 * ```Content/``` folder = Input files
