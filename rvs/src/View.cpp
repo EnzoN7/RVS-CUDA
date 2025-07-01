@@ -93,19 +93,40 @@ namespace rvs
 		cudaMalloc(&m_devReadYUV, yInputBytes + 2 * uvInputBytes);
 
 		cudaMalloc(&m_devNormalizedYUV, m_realSize.area() * sizeof(color_t));
+
 		cudaMalloc(&m_devNormalizedDepth, outputBytes);
 
 		cudaEventCreateWithFlags(&m_importColorFinished, cudaEventDisableTiming);
 		cudaEventCreateWithFlags(&m_importDepthFinished, cudaEventDisableTiming);
-
-		errno_t err = fopen_s(&m_inputColorFileYUV, m_filepath_color.c_str(), "rb");
-		if (err != 0)
+		
+		if (config.texture_video_type == "enc")
 		{
-			std::cerr << "[FILE ERROR]: " << "Failed to read raw YUV depth file \"" << m_filepath_color.c_str() << "\"" << std::endl;
-			std::exit(EXIT_FAILURE);
+			
+			m_gpuDecoder = new GpuDecoder();
+
+			int dec_buffer_size = DEC_BUFFER_SIZE;  // can be defiend as a input parameter
+
+			if (m_gpuDecoder->open( m_filepath_color.c_str(), dec_buffer_size) == false)
+			{
+				std::cerr << "[FILE ERROR]: " << "Failed video file \"" << m_filepath_color.c_str() << "\"" << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			#ifdef  USE_BUFFERING_DECODE
+						m_gpuDecoder->start_buffring_thread(detail::numFramesSeq);
+			#endif //  !USE_BUFFERING_DECODE
+
+		}
+		else
+		{
+			errno_t err = fopen_s(&m_inputColorFileYUV, m_filepath_color.c_str(), "rb");
+			if (err != 0)
+			{
+				std::cerr << "[FILE ERROR]: " << "Failed to read raw YUV depth file \"" << m_filepath_color.c_str() << "\"" << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
 		}
 
-		err = fopen_s(&m_inputDepthFile, m_filepath_depth.c_str(), "rb");
+		errno_t err = fopen_s(&m_inputDepthFile, m_filepath_depth.c_str(), "rb");
 		if (err != 0)
 		{
 			std::cerr << "[FILE ERROR]: " << "Failed to read raw YUV depth file \"" << m_filepath_depth.c_str() << "\"" << std::endl;
@@ -130,26 +151,59 @@ namespace rvs
 		m_hostYUV.release();
 		m_hostDepth.release();
 
-		fclose(m_inputColorFileYUV);
+		//@HoPe
+		if (m_config.texture_video_type == "enc")
+		{
+			if (m_gpuDecoder != nullptr)
+			{
+				m_gpuDecoder->close();
+				delete m_gpuDecoder;
+			}
+		}
+		else
+		{
+			fclose(m_inputColorFileYUV);
+		}
+
 		fclose(m_inputDepthFile);
+
 	}
 
 	template<typename channel_t, typename color_t>
 	void InputView<channel_t, color_t>::load(cudaStream_t& streamCol, cudaStream_t& streamDep)
 	{
+
 		if (m_parameters.getDisplacementMethod() == DisplacementMethod::depth && m_parameters.getDepthColorFormat() == ColorFormat::YUV420)
 		{
+
 			std::future<void> future_color = std::async(std::launch::async,
 				[this, &streamCol]()
 				{
-					read_color<channel_t, color_t>(m_inputColorFileYUV,
-												   m_frame, m_devNormalizedYUV, m_initialSize, m_realSize,
-												   m_colorScale, m_initialColorsType,
-												   streamCol,
-												   m_hostYUV,
-												   m_yInputBytes, m_uvInputBytes,
-												   m_devReadYUV,
-												   m_importColorFinished);
+
+					if (m_config.texture_video_type == "enc")
+					{
+						
+						read_color<channel_t, color_t>(m_gpuDecoder,
+							m_frame, m_devNormalizedYUV, m_initialSize, m_realSize,
+							m_colorScale, m_initialColorsType,
+							streamCol,
+							m_hostYUV,
+							m_yInputBytes, m_uvInputBytes,
+							m_devReadYUV,
+							m_importColorFinished);
+						
+					}
+					else
+					{
+						read_color<channel_t, color_t>(m_inputColorFileYUV,
+							m_frame, m_devNormalizedYUV, m_initialSize, m_realSize,
+							m_colorScale, m_initialColorsType,
+							streamCol,
+							m_hostYUV,
+							m_yInputBytes, m_uvInputBytes,
+							m_devReadYUV,
+							m_importColorFinished);
+					}
 				}
 			);
 

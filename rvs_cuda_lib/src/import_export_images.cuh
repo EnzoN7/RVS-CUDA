@@ -40,4 +40,11 @@ void exportColorsToCPU(color_t*& devYUV, cv::Mat& hostY, cv::Mat& hostU, cv::Mat
                        size_t dstSizeY, size_t dstSizeUV,
                        void*& devDstY, void*& devDstU, void*& devDstV);
 
+template<typename channel_t, typename color_t>
+void normalizeDecodeData(void* devY, void* devU, void* devV, color_t*& devNormalizedYUV,
+    cv::Size initialY_size, cv::Size realSize,
+    int type, float colorScale,
+    cudaStream_t& stream, size_t yInputBytes, size_t uvInputBytes,
+    cudaEvent_t& importColorFinished);
+
 #endif

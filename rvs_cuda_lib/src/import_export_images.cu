@@ -676,6 +676,43 @@ void exportColorsToCPU(color_t*& devYUV, cv::Mat& hostY, cv::Mat& hostU, cv::Mat
 #endif
 }
 
+template<typename channel_t, typename color_t>
+void normalizeDecodeData(void* devY, void* devU, void* devV, color_t*& devNormalizedYUV,
+    cv::Size initialY_size, cv::Size realSize,
+    int type, float colorScale,
+    cudaStream_t& stream, size_t yInputBytes, size_t uvInputBytes,
+    cudaEvent_t& importColorFinished)
+{
+    cudaStreamSynchronize(stream);
+    int bw = 16, bh = 8;
+    dim3 block(bw, bh);
+    dim3 grid((realSize.width + bw - 1) / bw,
+        (realSize.height + bh - 1) / bh);
+
+    cv::Size uvSize = initialY_size / 2;
+    cudaStreamSynchronize(stream);
+    importYUV<channel_t, color_t> << <grid, block, 0, stream >> > (
+        devY, devU, devV,
+        devNormalizedYUV,
+        initialY_size.width, initialY_size.height,
+        uvSize.width, uvSize.height,
+        realSize.width, realSize.height,
+        colorScale, type, (initialY_size == realSize));
+
+    cudaEventRecord(importColorFinished, stream);
+    cudaStreamSynchronize(stream);
+
+#ifdef _DEBUG
+    cudaError_t state = cudaGetLastError();
+    if (state != cudaSuccess)
+    {
+        std::cerr << "[CUDA ERROR]: " << cudaGetErrorString(state) << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+#endif
+}
+
+
 template void importColorsToGPU<float, float3>(
     cv::Mat& hostYUV, float3*& devNormalizedYUV,
     cv::Size initialY_size, cv::Size realSize,
@@ -741,3 +778,21 @@ template void exportColorsToCPU<half, half3>(half3*& devYUV, cv::Mat& hostY, cv:
     cudaEvent_t& inpainted, cudaEvent_t& exportedUV, cudaEvent_t& writeY, cudaEvent_t& writeU, cudaEvent_t& writeV,
     size_t dstSizeY, size_t dstSizeUV,
     void*& devDstY, void*& devDstU, void*& devDstV);
+
+template void normalizeDecodeData<float, float3>(void* devY, void* devU, void* devV, float3*& devNormalizedYUV,
+    cv::Size initialY_size, cv::Size realSize,
+    int type, float colorScale,
+    cudaStream_t& stream, size_t yInputBytes, size_t uvInputBytes,
+    cudaEvent_t& importColorFinished);
+
+template void normalizeDecodeData<double, double3>(void* devY, void* devU, void* devV, double3*& devNormalizedYUV,
+    cv::Size initialY_size, cv::Size realSize,
+    int type, float colorScale,
+    cudaStream_t& stream, size_t yInputBytes, size_t uvInputBytes,
+    cudaEvent_t& importColorFinished);
+
+template void normalizeDecodeData<half, half3>(void* devY, void* devU, void* devV, half3*& devNormalizedYUV,
+    cv::Size initialY_size, cv::Size realSize,
+    int type, float colorScale,
+    cudaStream_t& stream, size_t yInputBytes, size_t uvInputBytes,
+    cudaEvent_t& importColorFinished);

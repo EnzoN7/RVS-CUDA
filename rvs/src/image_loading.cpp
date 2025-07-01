@@ -52,6 +52,13 @@ Ecole de Technologie Superieure, Montreal, Canada:
 */
 
 #include "image_loading.hpp"
+//@HOPE
+#include "Gpudecoder.hpp"
+
+#include <cstdio>
+#include <chrono>
+#include <string>
+#include <iomanip>
 
 namespace rvs
 {
@@ -100,11 +107,11 @@ namespace rvs
 			fseek(inputDepthFile, static_cast<long>((inputDepthBytes * 3 / 2) * frame), SEEK_SET);
 			read_raw(inputDepthFile, hostDepth);
 
-			float near = parameters.getDepthRange()[0];
-			float far = parameters.getDepthRange()[1];
+			float near_val = parameters.getDepthRange()[0];
+			float far_val = parameters.getDepthRange()[1];
 			bool hasInvalidDepth = parameters.hasInvalidDepth();
 
-			importDepthToGPU<channel_t>(hostDepth, devNormalizedDepth, initialDepth_size, realSize, depthScale, near, far, hasInvalidDepth, initialDepthType, stream,
+			importDepthToGPU<channel_t>(hostDepth, devNormalizedDepth, initialDepth_size, realSize, depthScale, near_val, far_val, hasInvalidDepth, initialDepthType, stream,
 										inputDepthBytes,
 										devReadDepth,
 										importDepthFinished);
@@ -123,6 +130,85 @@ namespace rvs
 										   frame, devNormalizedYUV, initialY_size, realSize, colorScale, initialColorsType,
 										   stream, hostYUV, yInputBytes, uvInputBytes,
 										   devReadYUV, importColorFinished);
+	}
+
+	template<typename channel_t, typename color_t>
+	void read_color(GpuDecoder* decoder, int frame, color_t*& devNormalizedYUV,
+		cv::Size initialY_size, cv::Size realSize, float colorScale, int initialColorsType,
+		cudaStream_t& stream,
+		cv::Mat& hostYUV,
+		size_t yInputBytes, size_t uvInputBytes,
+		void*& devReadYUV, cudaEvent_t& importColorFinished)
+	{
+		//static std::lock_guard <std::mutex> lock(GpuDecoder::mtx);
+#ifndef USE_BUFFERING_DECODE
+		
+		//std::cout << "frame/id=" << frame<<"/"<< decoder->id << std::endl;
+		
+		int buf_idx = 0;
+		cudaStreamSynchronize(stream);
+		//decoder->stream = stream;
+		
+		
+		if (decoder->decode_frame(buf_idx, frame))
+		{
+
+#endif // !USE_BUFFERING_DECODE
+
+#ifdef USE_BUFFERING_DECODE
+			//=================================== CONSUMER ===================================
+			int buf_idx = decoder->read_idx.load(std::memory_order_acquire) % decoder->buffer_size;
+			// wait until something is full
+			while (decoder->status[buf_idx].load(std::memory_order_acquire) != 2)
+				std::this_thread::yield();
+
+			// skip until we find the right frame
+			while (frame != decoder->frame_idx[buf_idx].load(std::memory_order_acquire)) 
+			{
+				decoder->status[buf_idx].store(0, std::memory_order_release);
+				decoder->frame_idx[buf_idx].store(-1, std::memory_order_relaxed);
+				buf_idx = (buf_idx + 1) % decoder->buffer_size;
+
+				while (decoder->status[buf_idx].load(std::memory_order_acquire) != 2)
+					std::this_thread::yield();
+			}
+			//std::cout << "frame/id=" << decoder->frame_idx[buf_idx].load(std::memory_order_acquire) << "/" << decoder->id << std::endl;
+
+#endif // !USE_BUFFERING_DECODE
+			//-------------------- Process ----------------------
+			
+			auto frame_bytes = (yInputBytes + 2 * uvInputBytes);
+
+			//For test
+			//uint8_t* fb = new uint8_t[frame_bytes];
+			//cudaMemcpy(fb,(void*)( static_cast<uint8_t*>(decoder->devYUV)+ frame_bytes * buf_idx), frame_bytes, cudaMemcpyDeviceToHost);
+			//decoder->outframe_test->write(reinterpret_cast<const char*>(fb), frame_bytes);
+			
+			uint8_t* base = static_cast<uint8_t*>(decoder->devYUV) + frame_bytes * buf_idx;
+			uint8_t* devY = base;
+			uint8_t* devU = base + yInputBytes;
+			uint8_t* devV = base + (yInputBytes + uvInputBytes);
+			
+			normalizeDecodeData<channel_t, color_t>(devY, devU, devV, devNormalizedYUV,
+				initialY_size, realSize,
+				initialColorsType, colorScale,
+				stream, yInputBytes, uvInputBytes,
+				importColorFinished);
+			
+			//if (decoder->id == decoder->check_id)
+			//std::cout << "read from /frame: " << buf_idx << "/" << frame << std::endl;
+			
+#ifdef USE_BUFFERING_DECODE
+			
+			decoder->frame_idx[buf_idx].store(-1, std::memory_order_relaxed);
+			decoder->status[buf_idx].store(0, std::memory_order_release);
+			decoder->read_idx.store((buf_idx + 1) % decoder->buffer_size);
+			//=================================== CONSUMER ===================================
+#endif // !USE_BUFFERING_DECODE
+			
+#ifndef USE_BUFFERING_DECODE
+		}
+#endif
 	}
 
 	template<typename channel_t>
@@ -148,6 +234,14 @@ namespace rvs
 		size_t yInputBytes, size_t uvInputBytes,
 		void*& devReadYUV, cudaEvent_t& importColorFinished
 	);
+	template void read_color<float, float3>(
+		GpuDecoder* decoder, int frame, float3*& devNormalizedYUV,
+		cv::Size initialY_size, cv::Size realSize, float colorScale, int initialColorsType,
+		cudaStream_t& stream,
+		cv::Mat& hostYUV,
+		size_t yInputBytes, size_t uvInputBytes,
+		void*& devReadYUV, cudaEvent_t& importColorFinished
+		);
 
 	template void read_color<double, double3>(
 		FILE*& inputColorFileYUV, int frame, double3*& devNormalizedYUV,
@@ -157,6 +251,15 @@ namespace rvs
 		size_t yInputBytes, size_t uvInputBytes,
 		void*& devReadYUV, cudaEvent_t& importColorFinished
 	);
+	template void read_color<double, double3>(
+		GpuDecoder* decoder, int frame, double3*& devNormalizedYUV,
+		cv::Size initialY_size, cv::Size realSize, float colorScale, int initialColorsType,
+		cudaStream_t& stream,
+		cv::Mat& hostYUV,
+		size_t yInputBytes, size_t uvInputBytes,
+		void*& devReadYUV, cudaEvent_t& importColorFinished
+		);
+
 
 	template void read_color<half, half3>(
 		FILE*& inputColorFileYUV, int frame, half3*& devNormalizedYUV,
@@ -166,6 +269,14 @@ namespace rvs
 		size_t yInputBytes, size_t uvInputBytes,
 		void*& devReadYUV, cudaEvent_t& importColorFinished
 	);
+	template void read_color<half, half3>(
+		GpuDecoder* decoder, int frame, half3*& devNormalizedYUV,
+		cv::Size initialY_size, cv::Size realSize, float colorScale, int initialColorsType,
+		cudaStream_t& stream,
+		cv::Mat& hostYUV,
+		size_t yInputBytes, size_t uvInputBytes,
+		void*& devReadYUV, cudaEvent_t& importColorFinished
+		);
 
 	template void read_depth<float>(
 		FILE*&, int,

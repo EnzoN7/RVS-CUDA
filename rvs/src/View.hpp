@@ -62,6 +62,7 @@ Ecole de Technologie Superieure, Montreal, Canada:
 #include <future>
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
+#include "GpuDecoder.hpp"
 
 namespace rvs
 {
@@ -145,6 +146,7 @@ namespace rvs
 
 		FILE* m_inputColorFileYUV;
 		FILE* m_inputDepthFile;
+		GpuDecoder* m_gpuDecoder = nullptr;
 
 		int m_frame;
 		float m_colorScale;

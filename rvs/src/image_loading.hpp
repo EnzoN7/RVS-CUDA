@@ -57,6 +57,7 @@ Ecole de Technologie Superieure, Montreal, Canada:
 #include "Parameters.hpp"
 #include "Config.hpp"
 #include "import_export_images.cuh"
+#include "GpuDecoder.hpp"
 
 #include <omp.h>
 #include <opencv2/imgproc.hpp>
@@ -71,6 +72,14 @@ namespace rvs
 {
 	template<typename channel_t, typename color_t>
 	void read_color(FILE*& inputColorFileYUV, int frame, color_t*& devNormalizedYUV,
+		cv::Size initialY_size, cv::Size realSize, float colorScale, int initialColorsType,
+		cudaStream_t& stream,
+		cv::Mat& hostYUV,
+		size_t yInputBytes, size_t uvInputBytes,
+		void*& devReadYUV, cudaEvent_t& importColorFinished);
+
+	template<typename channel_t, typename color_t>
+	void read_color(GpuDecoder* decoder, int frame, color_t*& devNormalizedYUV,
 		cv::Size initialY_size, cv::Size realSize, float colorScale, int initialColorsType,
 		cudaStream_t& stream,
 		cv::Mat& hostYUV,

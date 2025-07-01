@@ -122,12 +122,16 @@ namespace rvs
 		int number_of_output_frames = 1;
 		PoseTrace pose_trace;
 
+		std::string texture_video_type = "yuv";
+	
 	private:
 		Config() = default;
 
+		void setTextureVideoType(json::Node root);
+
 		std::vector<Parameters> loadCamerasParametersFromFile(std::string const& filepath, std::vector<std::string> names, json::Node overrides);
 		void loadPoseTraceFromFile(std::string const& filepath);
-
+		
 		void setVersionFrom(json::Node root);
 		void setInputCameraNamesFrom(json::Node root);
 		void setVirtualCameraNamesFrom(json::Node root);

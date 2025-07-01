@@ -46,17 +46,62 @@
 # Author of the CUDA version:
 #
 # Ecole de Technologie Superieure, Montreal, Canada:
-#	Enzo Di Maria, https://github.com/EnzoN7/
+#	Enzo Di Maria,  https://github.com/EnzoN7/
+#	Hossein Pejman, https://github.com/hope1985
 
 
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 set(PROJECT_NAME "RVS")
 project(${PROJECT_NAME} LANGUAGES CXX CUDA)
-set(CMAKE_CUDA_ARCHITECTURES 75)
+set(CMAKE_CUDA_ARCHITECTURES 80)
 
 find_package(OpenCV REQUIRED)
 include_directories(SYSTEM ${OpenCV_INCLUDE_DIRS})
 
+
+# Set this to your actual FFMPEG path
+set(FFMPEG_DIR "" CACHE PATH "Path to FFMPEG DIR")
+
+# Sanity check
+if (NOT EXISTS "${FFMPEG_DIR}")
+    message(FATAL_ERROR "FFMPEG DIR not found at: ${FFMPEG_DIR}")
+endif()
+
+# Allow user to specify FFmpeg paths from command line
+set(FFMPEG_INCLUDE_DIR "${FFMPEG_DIR}/include")
+set(FFMPEG_LIB_DIR "${FFMPEG_DIR}/lib")
+include_directories(SYSTEM ${FFMPEG_INCLUDE_DIR})
+link_directories(${FFMPEG_LIB_DIR})
+
+# Set the libraries you need
+set(FFMPEG_LIBS
+    avcodec
+    avformat
+    avutil
+    swscale
+    swresample
+)
+
+# Set this to your actual NVDEC SDK path
+set(NVDEC_SDK_DIR "" CACHE PATH "Path to NVDEC SDK")
+
+# Sanity check
+if (NOT EXISTS "${NVDEC_SDK_DIR}")
+    message(FATAL_ERROR "NVDEC SDK not found at: ${NVDEC_SDK_DIR}")
+endif()
+
+# Add include and lib directories
+set(NVDEC_INCLUDE_DIR "${NVDEC_SDK_DIR}/Samples/NvCodec")
+set(NVDEC_LIB_DIR "${NVDEC_SDK_DIR}/Lib/x64")
+set(NVDEC_CPP_FILE "${NVDEC_SDK_DIR}/Samples/NvCodec/NvDecoder/NvDecoder.cpp")
+include_directories(SYSTEM ${NVDEC_INCLUDE_DIR})
+link_directories(${NVDEC_LIB_DIR})
+
+set(NVDEC_LIBS
+nvencodeapi.lib
+nvcuvid.lib
+cuda.lib
+)
 find_package(OpenMP)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -99,7 +144,8 @@ set(PROJECT_SOURCES
 	rvs/src/image_loading.cpp
 	rvs/src/image_writing.cpp
 	rvs/src/PoseTraces.cpp
-	rvs/src/SpaceTransformer.cpp)
+	rvs/src/SpaceTransformer.cpp
+	rvs/src/GpuDecoder.cpp)
 
 set(PROJECT_HEADERS
 	rvs/src/BlendedView.hpp
@@ -113,7 +159,8 @@ set(PROJECT_HEADERS
 	rvs/src/image_writing.hpp
 	rvs/src/Projector.hpp
 	rvs/src/PoseTraces.hpp
-	rvs/src/SpaceTransformer.hpp)
+	rvs/src/SpaceTransformer.hpp
+	rvs/src/GpuDecoder.hpp)
 				 						 	 
 source_group("Source Files" FILES ${PROJECT_SOURCES} src/view_synthesis.cpp src/test.cpp)
 source_group("Header Files" FILES ${PROJECT_HEADERS})
@@ -124,7 +171,8 @@ set(CUDA_SOURCES
 	rvs_cuda_lib/src/scale_uv.cu
 	rvs_cuda_lib/src/unproject_project.cu
 	rvs_cuda_lib/src/import_export_images.cu
-	rvs_cuda_lib/src/transform_triangle.cu)
+	rvs_cuda_lib/src/transform_triangle.cu
+	rvs_cuda_lib/src/dtype_conversion.cu)
 set(CUDA_HEADERS
 	rvs_cuda_lib/src/types.cuh
 	rvs_cuda_lib/src/blend_img.cuh
@@ -132,17 +180,19 @@ set(CUDA_HEADERS
 	rvs_cuda_lib/src/scale_uv.cuh
 	rvs_cuda_lib/src/unproject_project.cuh
 	rvs_cuda_lib/src/import_export_images.cuh
-	rvs_cuda_lib/src/transform_triangle.cuh)
+	rvs_cuda_lib/src/transform_triangle.cuh
+	rvs_cuda_lib/src/dtype_conversion.cuh)
 
 source_group("Source Files" FILES ${CUDA_SOURCES})
 source_group("Header Files" FILES ${CUDA_HEADERS})
 
 add_library(RVSCudaLib ${CUDA_SOURCES} ${CUDA_HEADERS})
+add_library(${PROJECT_NAME}Lib ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${NVDEC_CPP_FILE})
+target_include_directories(${PROJECT_NAME}Lib PUBLIC rvs_cuda_lib/src  ${FFMPEG_INCLUDE_DIR} ${NVDEC_INCLUDE_DIR})
 
-add_library(${PROJECT_NAME}Lib ${PROJECT_SOURCES} ${PROJECT_HEADERS})
-target_include_directories(${PROJECT_NAME}Lib PUBLIC rvs_cuda_lib/src)
 
 add_executable(${PROJECT_NAME} rvs/src/Application.cpp rvs/src/Application.hpp rvs/src/view_synthesis.cpp)
 
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}Lib ${OpenCV_LIBS} ${CUDA_LIB})
-target_link_libraries(${PROJECT_NAME}Lib RVSCudaLib)
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}Lib ${OpenCV_LIBS} ${CUDA_LIB} ${FFMPEG_LIBS} ${NVDEC_LIBS})
+target_link_libraries(${PROJECT_NAME}Lib RVSCudaLib )
+target_link_libraries(RVSCudaLib )

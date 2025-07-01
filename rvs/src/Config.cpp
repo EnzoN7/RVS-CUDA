@@ -87,6 +87,8 @@ namespace rvs
 
 		Config config;
 
+		config.setTextureVideoType(root);
+
 		//config.setVersionFrom(root);
 		config.setInputCameraNamesFrom(root);
 		config.setVirtualCameraNamesFrom(root);
@@ -119,6 +121,21 @@ namespace rvs
 		}
 
 		return config;
+	}
+
+	void Config::setTextureVideoType(json::Node root)
+	{
+		auto vtype = root.optional("TextureVideoType");
+		if (vtype.type() == json::Node::Type::string)
+		{
+			auto vtypeStr = vtype.asString();
+			if (vtypeStr == "yuv" || vtypeStr == "enc")
+			{
+				texture_video_type = vtypeStr;
+			}
+		}
+		if (g_verbose)
+			std::cout << "TextureVideoType: " << texture_video_type << '\n' << std::endl;
 	}
 
 	std::vector<Parameters> Config::loadCamerasParametersFromFile(std::string const& filepath, std::vector<std::string> names, json::Node overrides)
