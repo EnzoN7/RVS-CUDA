@@ -151,12 +151,10 @@ namespace rvs
 		m_hostYUV.release();
 		m_hostDepth.release();
 
-		//@HoPe
 		if (m_config.texture_video_type == "enc")
 		{
 			if (m_gpuDecoder != nullptr)
 			{
-				m_gpuDecoder->close();
 				delete m_gpuDecoder;
 			}
 		}

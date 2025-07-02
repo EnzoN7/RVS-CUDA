@@ -311,7 +311,8 @@ namespace rvs
 		{
 			int view = (i >= m_numInputViews) ? 0 : i;
 
-			if (config.texture_names[view].substr(config.texture_names[view].size() - 4, 4) != ".yuv")
+			if (!(config.texture_names[view].substr(config.texture_names[view].size() - 4, 4) == ".yuv" || config.texture_names[view].substr(config.texture_names[view].size() - 4, 4) == ".mp4"))
+			//if (config.texture_names[view].substr(config.texture_names[view].size() - 4, 4) != ".yuv" )
 			{
 				std::cerr << "Reading frames only in YUV" << std::endl;
 				std::exit(EXIT_FAILURE);

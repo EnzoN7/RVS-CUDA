@@ -52,7 +52,6 @@ Ecole de Technologie Superieure, Montreal, Canada:
 */
 
 #include "image_loading.hpp"
-//@HOPE
 #include "Gpudecoder.hpp"
 
 #include <cstdio>
