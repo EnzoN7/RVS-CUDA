@@ -326,16 +326,18 @@ void GpuDecoder::close() {
     }
 #endif // USE_BUFFERING_DECODE
 
+  
     if (m_demuxer) delete m_demuxer;
     if (m_decoder) delete m_decoder;
-    if (m_video_stream) delete m_video_stream;
+    
+
     cudaFree(devYUV);
     cudaFree(m_devUV_tmp);
     cudaStreamDestroy(stream);
 
     //cuDevicePrimaryCtxRelease(gpuId);
-    m_decoder->~NvDecoder();
-    m_demuxer->~FFmpegDemuxer();
+    //m_decoder->~NvDecoder();
+    //m_demuxer->~FFmpegDemuxer();
 
 #ifdef OUTPUT_TEST
     outframe_test->close();

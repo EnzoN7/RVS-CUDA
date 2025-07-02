@@ -22,7 +22,7 @@ extern "C" {
 #include "NvDecoder/NvDecoder.h"
 #include "../Utils/FFmpegDemuxer.h"
 
-#define OUTPUT_TEST
+//#define OUTPUT_TEST
 #define USE_BUFFERING_DECODE 
 
 #ifdef USE_BUFFERING_DECODE
