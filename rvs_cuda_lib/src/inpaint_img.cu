@@ -49,7 +49,7 @@ __global__ void initializeMapKernel(color_t* devColor, ushort3* map,
     map[idx] = make_ushort3(tx, ty, isGreen ? (imgWidth + imgHeight) : 0);
 }
 
-__global__ void computeNearestKernel(ushort3* map, int imgHeight, int imgWidth, bool* change)
+__global__ void computeNearestKernel(const ushort3* map_read, ushort3* map_write, int imgHeight, int imgWidth, int* change)
 {
     int tx = blockIdx.x * blockDim.x + threadIdx.x;
     int ty = blockIdx.y * blockDim.y + threadIdx.y;
@@ -59,22 +59,23 @@ __global__ void computeNearestKernel(ushort3* map, int imgHeight, int imgWidth, 
 
     int threadId = ty * imgWidth + tx;
 
-    ushort3 pos = map[threadId];
+    ushort3 pos = map_read[threadId];
+    map_write[threadId] = pos;
 
     if (pos.z > 0)
     {
-        for (int dx = fmaxf(tx - 1, 0); dx < fminf(tx + 2, imgWidth); ++dx)
+        for (int dx = MAX(tx - 1, 0); dx < MIN(tx + 2, imgWidth); ++dx)
         {
-            for (int dy = fmaxf(ty - 1, 0); dy < fminf(ty + 2, imgHeight); ++dy)
+            for (int dy = MAX(ty - 1, 0); dy < MIN(ty + 2, imgHeight); ++dy)
             {
                 if (abs(tx - dx) + abs(ty - dy) == 1)
                 {
                     int neighborIdx = dy * imgWidth + dx;
-                    ushort3 path = map[neighborIdx];
-                    if (path.z + (ushort)1 < map[threadId].z)
+                    ushort3 path = map_read[neighborIdx];
+                    if (path.z + (ushort)1 < pos.z)
                     {
-                        map[threadId] = make_ushort3(path.x, path.y, path.z + (ushort)1);
-                        *change = true;
+                        map_write[threadId] = make_ushort3(path.x, path.y, path.z + (ushort)1);
+                        atomicOr(change, 1);
                     }
                 }
             }
@@ -103,12 +104,13 @@ __global__ void inpaintKernel(color_t* devColor, ushort3* map, int imgHeight, in
 }
 
 template<typename color_t>
-void inpaintImg(color_t*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap, bool*& devChange)
+void inpaintImg(color_t*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap,
+    ushort3*& devMap_swap, int*& devChange)
 {
     int imgHeight = dstSize.height;
     int imgWidth = dstSize.width;
 
-    bool change = true;
+    int hostChange = 1;
 
     int blockWidth = 16;
     int blockHeight = 8;
@@ -117,16 +119,24 @@ void inpaintImg(color_t*& devColor, cv::Size dstSize, cudaStream_t& stream, usho
 
     initializeMapKernel<color_t><<<gridDim, blockDim, 0, stream>>>(devColor, devMap, imgHeight, imgWidth);
 
-    while (change)
-    {
-        change = false;
+    ushort3* map_read = devMap;
+    ushort3* map_write = devMap_swap;
 
-        cudaMemcpyAsync(devChange, &change, sizeof(bool), cudaMemcpyHostToDevice, stream);
-        computeNearestKernel <<<gridDim, blockDim, 0, stream>>> (devMap, imgHeight, imgWidth, devChange);
-        cudaMemcpyAsync(&change, devChange, sizeof(bool), cudaMemcpyDeviceToHost, stream);
+    while (hostChange)
+    {
+        hostChange = 0;
+
+        cudaMemcpyAsync(devChange, &hostChange, sizeof(int), cudaMemcpyHostToDevice, stream);
+        computeNearestKernel <<<gridDim, blockDim, 0, stream>>> (map_read, map_write, imgHeight, imgWidth, devChange);
+        cudaMemcpyAsync(&hostChange, devChange, sizeof(int), cudaMemcpyDeviceToHost, stream);
+        cudaStreamSynchronize(stream);
+
+        ushort3* temp = map_read;
+        map_read = map_write;
+        map_write = temp;
     }
 
-    inpaintKernel<color_t><<<gridDim, blockDim, 0, stream>>>(devColor, devMap, imgHeight, imgWidth);
+    inpaintKernel<color_t><<<gridDim, blockDim, 0, stream>>>(devColor, map_read, imgHeight, imgWidth);
 
 #ifdef _DEBUG
     cudaError_t state = cudaGetLastError();
@@ -138,6 +148,9 @@ void inpaintImg(color_t*& devColor, cv::Size dstSize, cudaStream_t& stream, usho
 #endif
 }
 
-template void inpaintImg<float3>(float3*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap, bool*& devChange);
-template void inpaintImg<double3>(double3*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap, bool*& devChange);
-template void inpaintImg<half3>(half3*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap, bool*& devChange);
+template void inpaintImg<float3>(float3*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap,
+    ushort3*& devMap_swap, int*& devChange);
+template void inpaintImg<double3>(double3*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap,
+    ushort3*& devMap_swap, int*& devChange);
+template void inpaintImg<half3>(half3*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap,
+    ushort3*& devMap_swap, int*& devChange);

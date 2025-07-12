@@ -130,7 +130,8 @@ namespace rvs
 			int& next_frame_to_load,
 			int& doubleBufferIndex,
 			Pose& pose,
-			Parameters& params_virtual);
+			Parameters& params_virtual,
+			const Parameters& initial_param);
 
 		unsigned max_level(int bit_depth);
 

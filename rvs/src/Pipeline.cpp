@@ -76,7 +76,8 @@ namespace rvs
 	{
 		Config config = getConfig();
 		Pose pose;
-		Parameters& params_virtual = config.params_virtual[0];
+		Parameters params_virtual = config.params_virtual[0];
+		const Parameters initial_param = config.params_virtual[0];
 
 		int inputFrame = 0;
 		int totalInputFrames = config.number_of_frames;
@@ -91,7 +92,8 @@ namespace rvs
 				for (int virtualFrame = 0; virtualFrame < config.number_of_output_frames; ++virtualFrame)
 				{
 					computeView(inputFrame, virtualFrame, config, totalInputFrames,
-								frame_to_load, next_frame_to_load, doubleBufferIndex, pose, params_virtual);
+								frame_to_load, next_frame_to_load, doubleBufferIndex, pose, params_virtual,
+								initial_param);
 				}
 
 				if (m_saveColorFuture.valid())
@@ -126,7 +128,8 @@ namespace rvs
 							   int& next_frame_to_load,
 							   int& doubleBufferIndex,
 							   Pose& pose,
-							   Parameters& params_virtual)
+							   Parameters& params_virtual,
+							   const Parameters& initial_param)
 	{
 #ifdef _DEBUG
 		std::cout << "FRAME " << virtualFrame << std::endl;
@@ -134,11 +137,17 @@ namespace rvs
 
 		inputFrame = config.start_frame + virtualFrame;
 		doubleBufferIndex = virtualFrame % 2;
+		
+		//@HoPe //Check pose_trace is empty 
+		if (config.pose_trace.empty() == false)
+		{
+			pose = config.pose_trace[inputFrame];
 
-		pose = config.pose_trace[inputFrame];
-
-		params_virtual.setPosition(params_virtual.getPosition() + pose.position);
-		params_virtual.setRotation(pose.rotation);
+			params_virtual.setPosition(initial_param.getPosition() + pose.position);
+			params_virtual.setRotation(pose.rotation);
+		
+		}
+		
 
 		for (int inputView = 0; inputView < m_numInputViews; ++inputView)
 		{
@@ -236,11 +245,12 @@ namespace rvs
 			std::exit(EXIT_FAILURE);
 		}
 
-		if (config.pose_trace.empty())
+		//@HoPe
+		/*if (config.pose_trace.empty())
 		{
 			std::cerr << "Pose trace empty" << std::endl;
 			std::exit(EXIT_FAILURE);
-		}
+		}*/
 
 		if (config.VirtualCameraNames.size() != 1)
 		{

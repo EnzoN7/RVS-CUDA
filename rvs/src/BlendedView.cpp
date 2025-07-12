@@ -98,7 +98,8 @@ namespace rvs
 		cudaMalloc(&m_devBlendedColor, m_virtualSize.area() * sizeof(color_t));
 
 		cudaMalloc(&m_devMap, m_virtualSize.area() * sizeof(ushort3));
-		cudaMalloc(&m_devChange, sizeof(bool));
+		cudaMalloc(&m_devMap_swap, m_virtualSize.area() * sizeof(ushort3));
+		cudaMalloc(&m_devChange, sizeof(int));
 
 		cudaMalloc(&m_devDstY, m_dstSizeY);
 		cudaMalloc(&m_devDstU, m_dstSizeUV);
@@ -138,6 +139,7 @@ namespace rvs
 		cudaFree(m_devDepthsAddr);
 
 		cudaFree(m_devMap);
+		cudaFree(m_devMap_swap);
 		cudaFree(m_devChange);
 
 		delete[] m_hostColorsAddr;
@@ -205,7 +207,7 @@ namespace rvs
 	template<typename channel_t, typename color_t>
 	void BlendedViewSimple<channel_t, color_t>::inpaint(cudaStream_t& stream)
 	{
-		inpaintImg<color_t>(m_devBlendedColor, m_virtualSize, stream, m_devMap, m_devChange);
+		inpaintImg<color_t>(m_devBlendedColor, m_virtualSize, stream, m_devMap, m_devMap_swap, m_devChange);
 		cudaEventRecord(m_inpainted, stream);
 	}
 

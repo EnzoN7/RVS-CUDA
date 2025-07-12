@@ -122,7 +122,8 @@ namespace rvs
 
 		color_t* m_devBlendedColor;
 		ushort3* m_devMap;
-		bool* m_devChange;
+		ushort3* m_devMap_swap;
+		int* m_devChange;
 
 		cudaEvent_t m_importValiditiesAddr;
 		cudaEvent_t m_importDepthsAddr;

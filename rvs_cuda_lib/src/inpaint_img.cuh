@@ -16,6 +16,6 @@ Ecole de Technologie Superieure, Montreal, Canada:
 #include "types.cuh"
 
 template<typename color_t>
-void inpaintImg(color_t*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap, bool*& devChange);
+void inpaintImg(color_t*& devColor, cv::Size dstSize, cudaStream_t& stream, ushort3*& devMap, ushort3*& devMap_swap, int*& devChange);
 
 #endif
