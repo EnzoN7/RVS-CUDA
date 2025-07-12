@@ -31,13 +31,14 @@ extern "C" {
 #define DEC_BUFFER_SIZE 1
 #endif
 
-//============ NOTE: ONLY  WORK FOR INTRA-ONLY and Low dely P (IPPP..) profiles ============
+//============ NOTE: ONLY WORK FOR INTRA-ONLY and LOW DELAY P (IPPP..) PROFILES ============
 using namespace std;
 class GpuDecoder {
 public:
 
     //Uses to give an uniqe Id to each instance of GpuDecoder
     static int instance_count;
+    static string makeCudaContext(CUcontext* cuCtx, int gpuId, unsigned int flags);
 
     GpuDecoder();
     ~GpuDecoder();
@@ -74,10 +75,9 @@ private:
     std::thread* producer_thread = nullptr;
 #endif
 
-
+  
 private:
 
-    static string makeCudaContext(CUcontext* cuCtx, int gpuId, unsigned int flags);
 
     int m_current_frame_index = 0;
     int m_start_frame_index = 0;

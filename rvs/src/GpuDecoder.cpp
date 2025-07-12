@@ -138,7 +138,6 @@ bool GpuDecoder::open(const std::string& filepath, int buf_size, int gpuId, int 
     }
 
     //cuCtxPushCurrent(m_cuContext); //Not neccessary
-    //Whether we push the current context or not this stream should be created after creating context to be valid for sending to the NvDecoder constructor
     //If we do not use this stream in the NVdecoder constructor using this stream would not be valid ...
     //... in the kenerl method like (nv12_10bit_to_yuv420p10le_kernel method) if we call decode_frame from another thread
     cudaStreamCreate(&stream);
@@ -184,13 +183,16 @@ bool GpuDecoder::open(const std::string& filepath, int buf_size, int gpuId, int 
         std::cerr << "cudaMalloc failed!" << std::endl;
         return false;
     }
-    cudaStreamSynchronize(stream);
 
+    cudaStreamSynchronize(stream);
+    //cuCtxPopCurrent(nullptr);
     return true;
 }
 
 bool GpuDecoder::decode_frame(int buff_idx, int frame_idx) {
 
+   
+    //cuCtxPushCurrent(m_cuContext); //Not neccessary
     if (frame_idx >= m_end_frame_index)
     {
         return false;
@@ -306,12 +308,13 @@ bool GpuDecoder::decode_frame(int buff_idx, int frame_idx) {
                 // outframe_test->write(reinterpret_cast<const char*>(outputframe->data[1]), uv_bytes);
                 //  outframe_test->write(reinterpret_cast<const char*>(outputframe->data[2]), uv_bytes);
 #endif        
-
+                //cuCtxPopCurrent(nullptr); 
                 m_current_frame_index++;
                 return true;
             }
         }
     }
+    //cuCtxPopCurrent(nullptr);
     return false;
 }
 
@@ -361,7 +364,7 @@ string GpuDecoder::makeCudaContext(CUcontext* cuCtx, int gpuId, unsigned int fla
     {
         return string("");
     }
-    //This does not work for accessing gpu memomory if the context is called from the another thread.
+    //This does not work for accessing gpu memory if the context is called from the another thread.
     //result=cuCtxCreate(cuCtx, flags, cuDevice);
     result = cuDevicePrimaryCtxRetain(cuCtx, cuDevice);
     if (result != CUDA_SUCCESS)
