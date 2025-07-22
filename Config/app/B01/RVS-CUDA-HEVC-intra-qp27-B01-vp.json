@@ -1,0 +1,36 @@
+{
+	"TextureVideoType": "enc",
+    "Version": "3.0",
+    "InputCameraParameterFile": "../../../Content/config/camera/B01.json",
+    "VirtualCameraParameterFile": "../../../Content/config/camera/B01.json",
+    "InputCameraNames": [
+        "v2",
+        "v4",
+        "v10",
+        "v13"
+    ],
+    "VirtualCameraNames": [
+        "viewport"
+    ],
+   "VirtualPoseTraceName": "../../../Content/config/pose_traces/B01p01.csv",
+    "ViewImageNames": [
+        "../../../Content/B01/hevc/v2_texture_2048x2048_yuv420p10le-qp27-INTRA.mp4",
+        "../../../Content/B01/hevc/v4_texture_2048x2048_yuv420p10le-qp27-INTRA.mp4",
+        "../../../Content/B01/hevc/v10_texture_2048x2048_yuv420p10le-qp27-INTRA.mp4",
+        "../../../Content/B01/hevc/v13_texture_2048x2048_yuv420p10le-qp27-INTRA.mp4"
+    ],
+    "DepthMapNames": [
+        "../../../Content/sequences/B01/v2_depth_2048x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/B01/v4_depth_2048x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/B01/v10_depth_2048x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/B01/v13_depth_2048x2048_yuv420p16le.yuv"
+    ],
+    "OutputFiles": [
+        "../../../Output/B01/Cuda-hevc-intra-q27_vp_v2v4v10v13_2048x2048_yuv420p10le.yuv"
+    ],
+    "NumberOfFrames": 150,
+	"NumberOfOutputFrames": 150,
+    "StartFrame": 0,
+    "BlendingFactor": 1.0,
+    "Precision": 1.0
+}

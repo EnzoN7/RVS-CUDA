@@ -1,0 +1,35 @@
+{
+    "Version": "3.0",
+    "InputCameraParameterFile": "../../../Content/config/camera/B02.json",
+    "VirtualCameraParameterFile": "../../../Content/config/camera/B02.json",
+    "InputCameraNames": [
+        "v2",
+        "v3",
+        "v7",
+        "v8"
+    ],
+    "VirtualCameraNames": [
+        "v1"
+    ],
+
+    "ViewImageNames": [
+        "../../../Content/sequences/B02/v2_texture_2048x2048_yuv420p10le.yuv",
+        "../../../Content/sequences/B02/v3_texture_2048x2048_yuv420p10le.yuv",
+        "../../../Content/sequences/B02/v7_texture_2048x2048_yuv420p10le.yuv",
+        "../../../Content/sequences/B02/v8_texture_2048x2048_yuv420p10le.yuv"
+    ],
+    "DepthMapNames": [
+        "../../../Content/sequences/B02/v2_depth_2048x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/B02/v3_depth_2048x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/B02/v7_depth_2048x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/B02/v8_depth_2048x2048_yuv420p16le.yuv"
+    ],
+    "OutputFiles": [
+        "../../../Output/B02/cpu_v1_v2v3v7v8_2048x2048_yuv420p10le.yuv"
+    ],
+    "NumberOfFrames": 150,
+	"NumberOfOutputFrames": 150,
+    "StartFrame": 0,
+    "BlendingFactor": 1.0,
+    "Precision": 1.0
+}

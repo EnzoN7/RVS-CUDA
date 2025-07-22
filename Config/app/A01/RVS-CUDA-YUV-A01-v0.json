@@ -1,0 +1,35 @@
+{
+    "Version": "3.0",
+    "InputCameraParameterFile": "../../../Content/config/camera/A01.json",
+    "VirtualCameraParameterFile": "../../../Content/config/camera/A01.json",
+    "InputCameraNames": [
+        "v1",
+        "v2",
+        "v5",
+        "v6"
+    ],
+    "VirtualCameraNames": [
+        "v0"
+    ],
+
+    "ViewImageNames": [
+        "../../../Content/sequences/A01/v1_texture_4096x2048_yuv420p10le.yuv",
+        "../../../Content/sequences/A01/v2_texture_4096x2048_yuv420p10le.yuv",
+        "../../../Content/sequences/A01/v5_texture_4096x2048_yuv420p10le.yuv",
+        "../../../Content/sequences/A01/v6_texture_4096x2048_yuv420p10le.yuv"
+    ],
+    "DepthMapNames": [
+        "../../../Content/sequences/A01/v1_depth_4096x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/A01/v2_depth_4096x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/A01/v5_depth_4096x2048_yuv420p16le.yuv",
+        "../../../Content/sequences/A01/v6_depth_4096x2048_yuv420p16le.yuv"
+    ],
+    "OutputFiles": [
+        "../../../Output/A01/Cuda-yuv_v0_v1v2v5v6_4096x2048_yuv420p10le.yuv"
+    ],
+    "NumberOfFrames": 80,
+	"NumberOfOutputFrames": 80,
+    "StartFrame": 0,
+    "BlendingFactor": 1.0,
+    "Precision": 1.0
+}
