@@ -19,9 +19,8 @@ This is the extended version of «RVS-CUDA», which supports compressed input te
 ## Usage
 
 ### How to build (Tested on Windows)
-
-#### Dependencies
 Built with CMake (file: ```CMakeLists.txt```).
+#### Dependencies
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
