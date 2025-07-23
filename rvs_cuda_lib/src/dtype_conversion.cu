@@ -1,3 +1,8 @@
+/*Author of dtype_conversion.cu:
+
+Ecole de Technologie Superieure, Montreal, Canada:
+    Hossein Pejman, https://github.com/hope1985/
+*/
 
 
 #include "dtype_conversion.cuh"

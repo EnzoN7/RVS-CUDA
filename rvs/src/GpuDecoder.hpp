@@ -1,3 +1,9 @@
+/*Author of GpuDecoder.hpp:
+
+Ecole de Technologie Superieure, Montreal, Canada:
+	Hossein Pejman, https://github.com/hope1985/
+*/
+
 #ifndef GpuDecoder_HPP
 #define GpuDecoder_HPP
 

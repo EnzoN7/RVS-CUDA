@@ -1,3 +1,10 @@
+/*Author of GpuDecoder.cpp:
+
+Ecole de Technologie Superieure, Montreal, Canada:
+	Hossein Pejman, https://github.com/hope1985/
+*/
+
+
 #include "GpuDecoder.hpp"
 #include <fstream>
 

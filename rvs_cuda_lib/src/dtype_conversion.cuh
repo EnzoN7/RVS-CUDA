@@ -1,3 +1,10 @@
+/*Author of dtype_conversion.cuh:
+
+Ecole de Technologie Superieure, Montreal, Canada:
+	Hossein Pejman, https://github.com/hope1985/
+*/
+
+
 #include "cuda_runtime.h"
 extern "C" {
 #include <libavformat/avformat.h>
