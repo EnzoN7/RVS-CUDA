@@ -1,4 +1,4 @@
-# RVS-CUDA-NVDEC : 2025 Version
+# RVS-CUDA-NVDEC
 
 ## Performance logs
 
@@ -18,11 +18,14 @@
 
 ## Description
 
-This alternative version of «RVS - Reference View Synthesizer»[^1] was originally developed as part of my final year project in Information Technology Engineering at the École de Technologie Supérieure, in Montreal, Canada.
+This is the extended version of «RVS-CUDA», which supports compressed input texture views. For four input views, it achieves the same speed as when using raw YUV input texture views. It uses NDVDEC in the NVIDIA Video Codec SDK for GPU-based frame decoding.
 
-This 2025 version aims to be even faster than the version supplied last year. By leveraging techniques based on asynchronism and kernel programming, **this new iteration is approximately 274 times faster** than RVS 4.0 on the «ClassroomVideo»[^3] sequence.
 
-The main objective of this software is to generate synthesized views enabling 6DoF navigation within a virtual environment. The principle is as follows. Starting from real 360° footage captured by cameras, the challenge is to simulate, using interpolation techniques, any perspective of a virtual camera that can move freely within the entire space.
+## Support Features
+-  YUV and compressed input texture view
+- compressed H.264 and H.265 input
+- Low Delay P and Intra Only configurations
+- 8-bit and 10-bit input support (10-bit available only for H.265)
 
 ## Table of contents
 
@@ -47,15 +50,16 @@ The main objective of this software is to generate synthesized views enabling 6D
 
 ## Usage
 
-### How to build RVS-CUDA
+### How to build RVS-CUDA (Tested on Windows)
 
 #### Dependencies
-
-Build with CMake (file: ```CMakeLists.txt```).
+Built with CMake (file: ```CMakeLists.txt```).
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 * [CUDA (tested on v12.4)](https://developer.nvidia.com/cuda-12-4-0-download-archive)
+* [FFmpeg (ffmpeg windows shared build v7.1.1)](https://www.gyan.dev/ffmpeg/builds/)
+* [NVIDIA VIDEO CODEC SDK (v13.0)](https://developer.nvidia.com/nvidia-video-codec-sdk/download)
 
 #### CUDA architectures and corresponding compute capabilities
 
@@ -89,24 +93,23 @@ RVS-CUDA/
 │   └── Release/
 │       └── RVS.exe
 ├── Config/
-│   ├── RVS-{sequence}.json
-│   ├── {sequence}.json
-│   └── PoseTrace.csv
-├── Content/
-│   └── {sequence}/
-│       └── *.yuv
-├── Experiment/
-│   └── {sequence}/
-│       └── *.yuv
+│   ├── app  (*.json)
+│   ├── camera (*.json)
+│   └── pose_traces (*.csv)
+├── sequence/
+│   └── {A01 (*.yuv)}/
+│       └─── {hevc (*.mp4)}/
+│   └── {B01 (*.yuv)}/
+│       └── {hevc (*.mp4)}/
+│   └── {...  (*.yuv)}/
+│       └── {hevc (*.mp4)}/
 ├── rvs/
 │   └── src/
 └── rvs_cuda_lib/
     └── src/
 ```
 
-* ```Content/``` folder = Input files
-* ```Experiment/``` folder = Output files
-
+* ```sequence/``` folder = Input files
 
 ### How to run RVS-CUDA
 
@@ -168,57 +171,14 @@ cd RVS-CUDA/Build/
 * The input files have an «Equirectangular» projection type.
 * The output files are YUV texture files.
 
-## Example of view synthesis using RVS on «ClassroomVideo»
-
-| <div align="center">Ground Truth</div> | <div align="center">OpenGL</div> |
-|--------------------------------------|-------------------------------|
-| ![Ground Truth](./Figures/A01-groundTruth.png) | ![OpenGL](./Figures/A01-openGL.png) |
-
-| <div align="center">OpenCV</div> | <div align="center">CUDA</div> |
-|--------------------------------------|-------------------------------|
-| ![OpenCV](./Figures/A01-openCV.png) | ![CUDA](./Figures/A01-CUDA.png) |
-
-## Quality and performance
-
-*Tested on NVIDIA RTX 3080.*
-
-### Comparison of time for producing a «Perspective» type image
-
-| Sequence         | Input Views | CPU (ms) | OpenGL (ms) | CUDA (ms) | Speedup (CPU / CUDA) |
-|------------------|-------------|----------|-------------|-----------|---------------------|
-| ClassroomVideo  | 4           | 12870    | 1524        | **X** | XX.XX               |
-| Museum           | 11          | 28252    | 2926        | **X** | XX.XX               |
-| Chess            | 4           | 8034     | 1062        | **X** | XX.XX               |
-
-### Quality of different implementations on «ClassroomVideo»
-
-| Implementation    | WS-PSNR[^4] (dB)                          | IV-PSNR[^5] (dB) | SSIM[^6]                           |
-|-------------------|--------------------------------------|-------------|---------------------------------------|
-| **CPU**   | Y: 33.61, U: 49.57, V: 52.21         | 44.16       | Y: 0.8287, U: 0.9913, V: 0.9947       |
-| **OpenGL**| Y: 33.46, U: 49.12, V: 51.79         | 43.57       | Y: 0.8270, U: 0.9906, V: 0.9943       |
-| **CUDA**  | Y: XX.XX, U: XX.XX, V: XX.XX         | XX.XX       | Y: XX.XX, U: XX.XX, V: XX.XX       |
-
-### Quality of different implementations on «Museum»
-
-| Implementation    | WS-PSNR (dB)                          | IV-PSNR (dB) | SSIM                                  |
-|-------------------|--------------------------------------|-------------|---------------------------------------|
-| **CPU**   | Y: 30.30, U: 38.84, V: 40.06         | 37.74       | Y: 0.9131, U: 0.9257, V: 0.9439       |
-| **OpenGL**| Y: 29.42, U: 38.65, V: 39.87         | 36.36       | Y: 0.8989, U: 0.9250, V: 0.9434       |
-| **CUDA**  | Y: XX.XX, U: XX.XX, V: XX.XX         | XX.XX       | Y: XX.XX, U: XX.XX, V: XX.XX       |
-
-### Quality of different implementations on «Chess»
-
-| Implementation    | WS-PSNR (dB)                          | IV-PSNR (dB) | SSIM                                  |
-|-------------------|--------------------------------------|-------------|---------------------------------------|
-| **CPU**   | Y: 23.58, U: 43.41, V: 46.91         | 32.04       | Y: 0.9251, U: 0.9889, V: 0.9947       |
-| **OpenGL**| Y: 22.28, U: 41.56, V: 45.43         | 30.54       | Y: 0.9012, U: 0.9845, V: 0.9926       |
-| **CUDA**  | Y: XX.XX, U: XX.XX, V: XX.XX         | XX.XX       | Y: XX.XX, U: XX.XX, V: XX.XX       |
-
 ## Author of RVS-CUDA
 
 Enzo Di Maria, Double Master's Degree | Specialist in Accelerated Computing:
 * École de Technologie Supérieure, Montréal, Canada[^7]
 * ENSEEIHT, Toulouse, France[^8]
+
+Hossein Pejman
+* École de Technologie Supérieure, Montréal, Canada[^7]
 
 [^1]: MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
 [^2]: S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
