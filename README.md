@@ -22,8 +22,6 @@ This is the extended version of «RVS-CUDA», which supports compressed input te
 Built with CMake (file: ```CMakeLists.txt```).
 #### Dependencies
 * [OpenCV (tested on v4.9.0)](https://github.com/opencv/opencv)
-* [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
-* [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 * [CUDA (tested on v12.4)](https://developer.nvidia.com/cuda-12-4-0-download-archive)
 * [FFmpeg (Windows shared build v7.1.1)](https://www.gyan.dev/ffmpeg/builds/)
 * [NVIDIA VIDEO CODEC SDK (v13.0)](https://developer.nvidia.com/nvidia-video-codec-sdk/download)
