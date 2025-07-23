@@ -1,4 +1,4 @@
-# RVS-CUDA : 2025 Version
+# RVS-CUDA-NVDEC : 2025 Version
 
 ## Performance logs
 
