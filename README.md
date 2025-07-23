@@ -20,10 +20,15 @@
 
 This is the extended version of «RVS-CUDA», which supports compressed input texture views. For four input views, it achieves the same speed as when using raw YUV input texture views. It uses NDVDEC in the NVIDIA Video Codec SDK for GPU-based frame decoding.
 
+#### Similar to RVS-CUDA 
+* Only works for images in YUV420 format.
+* The blending factor is always greater than or equal to 1.
+* The blending method is always set to «Simple».
+* The input files have an «Equirectangular» projection type.
+* The output files are YUV texture files.
 
-## Support Features
--  YUV and compressed input texture view
-- compressed H.264 and H.265 input
+## Supported Features for the Compressed Input Texture
+- H.264 and H.265 input
 - Low Delay P and Intra Only configurations
 - 8-bit and 10-bit input support (10-bit available only for H.265)
 
@@ -107,7 +112,6 @@ RVS-CUDA/
 │   └── src/
 └── rvs_cuda_lib/
     └── src/
-```
 
 * ```sequence/``` folder = Input files
 
@@ -121,74 +125,21 @@ cd RVS-CUDA/Build/
 * --fp64 : Start RVS-CUDA in double bits precision (64 bits).
 * *default* : Start RVS-CUDA in single bits precision (32 bits).
 
-### How to configure RVS-CUDA
-
-#### View synthesis *.json* parameters : ```RVS-{sequence}.json```
-
-| Name                     | Value       | Description |
-|:-------------------------|:------------|:------------|
-|Version                   | string      | version number |
-|InputCameraParameterFile  | string      | filepath to input cameras json |
-|VirtualCameraParameterFile| string      | filepath to input cameras json |
-|VirtualPoseTraceName      | string      | filepath to posetraces |
-|InputCameraNames          | string list | list of input cameras  |
-|VirtualCameraNames        | string list | list of output cameras |
-|ViewImageNames            | string list | filepaths to input images |
-|DepthMapNames             | string list | filepaths to input depth |
-|OutputFiles               | string list | filepaths to output images |
-|StartFrame                | int         | first frame (starts at 0) |
-|NumberOfFrames            | int         | number of frames in the input |
-|Precision                 | float       | precision level |
-|ColorSpace                | string      | YUV working colorspace |
-|ViewSynthesisMethod       | string      | Triangles |
-|BlendingMethod            | string      | Simple |
-|BlendingFactor            | float       | factor in the blending |
-
-#### Camera *.json* parameters : ```{sequence}.json```
-
-| Name         | Value         | Description |
-|:-------------|:--------------|:------------|
-|Name		   | string		   | camera name |
-|Position      | float 3  	   | position (front,left,up) |
-|Rotation      | float 3       | rotation (yaw,pitch,roll) |
-|Depthmap      | int           | has a depth |
-|Depth_range   | float 2       | min and max depth |
-|DisplacementMethod| string    | Depth |
-|Resolution    | int 2    	   | resolution (pixel) |
-|Projection    | string        | perspective or equirectangular |
-|Focal         | float 2       | focal (pixel) |
-|Principle_point| float 2      | principle point (pixel) |
-|BitDepthColor | int           | color bit depth |
-|BitDepthDepth | int           | depth map bit depth |
-|ColorSpace    | string        | YUV420 |
-|DepthColorSpace| string       | YUV420 |
-
-#### Differences from the initial version
-
-* Only works for images in YUV420 format.
-* The blending factor is always greater than or equal to 1.
-* The blending method is always set to «Simple».
-* The input files have an «Equirectangular» projection type.
-* The output files are YUV texture files.
+### How to configure the input texture type 
+Use "TextureVideoType": "enc" parameter is the app config files (See  .json files in the 'Config/app/' directory)
+* See the .json files in the 'Config/app/' directory.
 
 ## Author of RVS-CUDA
 
 Enzo Di Maria, Double Master's Degree | Specialist in Accelerated Computing:
-* École de Technologie Supérieure, Montréal, Canada[^7]
-* ENSEEIHT, Toulouse, France[^8]
+* École de Technologie Supérieure, Montréal, Canada[^1]
+* ENSEEIHT, Toulouse, France[^2]
 
 Hossein Pejman
-* École de Technologie Supérieure, Montréal, Canada[^7]
+* École de Technologie Supérieure, Montréal, Canada[^1]
 
-[^1]: MPEG-I Visual, RVS, https://gitlab.com/mpeg-i-visual/rvs
-[^2]: S. Fachada, B. Kroon, D. Bonatto, B. Sonneveldt, G. Lafruit, Reference View Synthesizer (RVS) 2.0 manual, [N17759], Ljubljana, Slovenia
-[^3]: MPEG-I Visual, Content Database, https://mpeg-miv.org/index.php/content-database-2/
-[^4]: Sun, Y., Lu, A., & Yu, L. (2017). Weighted-to-Spherically-Uniform Quality Evaluation for Omnidirectional Video. IEEE Signal Processing Letters, 24(9), 1-1. https://doi.org/10.1109/LSP.2017.2720693.
-[^5]: Dziembowski, A., Mieloch, D., Stankowski, J., & Grzelka, A. (2022). IV-PSNR—The Objective Quality Metric for Immersive Video Applications. IEEE Transactions on Circuits and Systems for Video Technology, 32(11), 7575–7591. https://doi.org/10.1109/TCSVT.2022.3179575.
-[^6]: Wang, Z., Bovik, A. C., Sheikh, H. R., & Simoncelli, E. P. (2004). Image Quality Assessment: From Error Visibility to Structural Similarity. IEEE Transactions on Image Processing, 13(4), 600–612. https://doi.org/10.1109/TIP.2003.819861.
-[^7]: ÉTS, https://www.etsmtl.ca
-[^8]: ENSEEIHT, https://www.enseeiht.fr/fr/index.html
-[^9]: CUDA GPUs, Your GPU Compute Capability, https://developer.nvidia.com/cuda-gpus
+[^1]: ÉTS, https://www.etsmtl.ca
+[^2]: ENSEEIHT, https://www.enseeiht.fr/fr/index.html
 
 ## Authors of the initial RVS software
 
