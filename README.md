@@ -75,8 +75,6 @@ RVS-CUDA/
 │   └── src/
 └── rvs_cuda_lib/
     └── src/
-
-* ```sequence/``` folder = Input files
 ```
 ### How to run RVS-CUDA
 
