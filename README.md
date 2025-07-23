@@ -31,7 +31,7 @@ Built with CMake (file: ```CMakeLists.txt```).
 
 #### CUDA architectures and corresponding compute capabilities
 
-Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```CMakeLists.txt``` file according to your NVIDIA GPU architecture[^9].
+Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```CMakeLists.txt``` file according to your NVIDIA GPU architecture.
 
 | Compute Capability | Architecture       | Example GPUs                          |
 |--------------------|-------------------|---------------------------------------|
