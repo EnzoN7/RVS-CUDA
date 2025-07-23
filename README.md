@@ -1,21 +1,5 @@
 # RVS-CUDA-NVDEC
 
-## Performance logs
-
-**Goal: > 30 fps**
-
-* **08 Avr: 24.85 fps**
-
-* 25 Mar: 21.5 fps
-
-* 09 Mar: 18.5 fps
-
-* 08 Mar: 16.5 fps
-
-* 28 Feb: 14 fps
-
-* 10 Jan: 7 fps
-
 ## Description
 
 This is the extended version of «RVS-CUDA», which supports compressed input texture views. For four input views, it achieves the same speed as when using raw YUV input texture views. It uses NDVDEC in the NVIDIA Video Codec SDK for GPU-based frame decoding.
@@ -31,27 +15,6 @@ This is the extended version of «RVS-CUDA», which supports compressed input te
 - H.264 and H.265 input
 - Low Delay P and Intra Only configurations
 - 8-bit and 10-bit input support (10-bit available only for H.265)
-
-## Table of contents
-
-- [Usage](#usage)[^2]
-  - [How to build RVS-CUDA](#how-to-build-rvs-cuda)
-    - [Dependencies](#dependencies)
-    - [CUDA architectures and corresponding compute capabilities](#cuda-architectures-and-corresponding-compute-capabilities)
-    - [Suggested project organization](#suggested-project-organization)
-  - [How to run RVS-CUDA](#how-to-run-rvs-cuda)
-  - [How to configure RVS-CUDA](#how-to-configure-rvs-cuda)
-    - [View synthesis *.json* parameters](#view-synthesis-json-parameters--rvs-sequencejson)
-    - [Camera *.json* parameters](#camera-json-parameters--sequencejson)
-    - [Differences from the initial version](#differences-from-the-initial-version)
-- [Example of view synthesis using RVS on «ClassroomVideo»](#example-of-view-synthesis-using-rvs-on-classroomvideo)
-- [Quality and performance](#quality-and-performance)
-  - [Comparison of time for producing a «Perspective» type image](#comparison-of-time-for-producing-a-perspective-type-image)
-  - [Quality of different implementations on «ClassroomVideo»](#quality-of-different-implementations-on-classroomvideo)
-  - [Quality of different implementations on «Museum»](#quality-of-different-implementations-on-museum)
-  - [Quality of different implementations on «Chess»](#quality-of-different-implementations-on-chess)
-- [Author of RVS-CUDA](#author-of-rvs-cuda)
-- [Authors of the initial RVS software](#authors-of-the-initial-rvs-software)
 
 ## Usage
 
@@ -114,7 +77,7 @@ RVS-CUDA/
     └── src/
 
 * ```sequence/``` folder = Input files
-
+```
 ### How to run RVS-CUDA
 
 ```bash
