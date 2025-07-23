@@ -26,7 +26,7 @@ Built with CMake (file: ```CMakeLists.txt```).
 * [fmt (tested on v10.0.0)](https://github.com/fmtlib/fmt)
 * [Catch2 (tested on v3.5.2)](https://github.com/catchorg/Catch2)
 * [CUDA (tested on v12.4)](https://developer.nvidia.com/cuda-12-4-0-download-archive)
-* [FFmpeg (ffmpeg windows shared build v7.1.1)](https://www.gyan.dev/ffmpeg/builds/)
+* [FFmpeg (Windows shared build v7.1.1)](https://www.gyan.dev/ffmpeg/builds/)
 * [NVIDIA VIDEO CODEC SDK (v13.0)](https://developer.nvidia.com/nvidia-video-codec-sdk/download)
 
 #### CUDA architectures and corresponding compute capabilities
@@ -87,7 +87,7 @@ cd RVS-CUDA/Build/
 * *default* : Start RVS-CUDA in single bits precision (32 bits).
 
 ### How to configure the input texture type 
-Use "TextureVideoType": "enc" parameter is the app config files (See  .json files in the 'Config/app/' directory)
+Use "TextureVideoType": "enc" parameter is the app config files (see  .json files in the 'Config/app/' directory)
 * See the .json files in the 'Config/app/' directory.
 
 ## Author of RVS-CUDA
