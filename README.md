@@ -18,7 +18,7 @@ This is the extended version of «RVS-CUDA», which supports compressed input te
 
 ## Usage
 
-### How to build RVS-CUDA (Tested on Windows)
+### How to build (Tested on Windows)
 
 #### Dependencies
 Built with CMake (file: ```CMakeLists.txt```).
@@ -56,7 +56,7 @@ Adjust the value of ```CMAKE_CUDA_ARCHITECTURES``` in the ```CMakeLists.txt``` f
 #### Suggested project organization
 
 ```
-RVS-CUDA/
+RVS-CUDA-NVDEC/
 ├── Build/
 │   └── Release/
 │       └── RVS.exe
@@ -79,7 +79,7 @@ RVS-CUDA/
 ### How to run RVS-CUDA
 
 ```bash
-cd RVS-CUDA/Build/
+cd RVS-CUDA-DEC/Build/
 ./Release/RVS.exe "../Config/RVS-{sequence}.json" [--fp16 || --fp64]
 ```
 * --fp16 : Start RVS-CUDA in half bits precision (16 bits).
@@ -87,7 +87,7 @@ cd RVS-CUDA/Build/
 * *default* : Start RVS-CUDA in single bits precision (32 bits).
 
 ### How to configure the input texture type 
-Use "TextureVideoType": "enc" parameter is the app config files (see  .json files in the 'Config/app/' directory)
+Use "TextureVideoType": "enc" parameter in the app config files (see .json files in the 'Config/app/' directory)
 * See the .json files in the 'Config/app/' directory.
 
 ## Author of RVS-CUDA
