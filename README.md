@@ -73,7 +73,7 @@ RVS-CUDA-NVDEC/
 └── rvs_cuda_lib/
     └── src/
 ```
-### How to run RVS-CUDA
+### How to run RVS-CUDA-NVDEC
 
 ```bash
 cd RVS-CUDA-DEC/Build/
@@ -87,7 +87,7 @@ cd RVS-CUDA-DEC/Build/
 Use "TextureVideoType": "enc" parameter in the app config files (see .json files in the 'Config/app/' directory)
 * See the .json files in the 'Config/app/' directory.
 
-## Author of RVS-CUDA
+## Author of RVS-CUDA-NVDEC
 
 Enzo Di Maria, Double Master's Degree | Specialist in Accelerated Computing:
 * École de Technologie Supérieure, Montréal, Canada[^1]
