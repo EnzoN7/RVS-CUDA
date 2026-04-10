@@ -55,6 +55,7 @@ Ecole de Technologie Superieure, Montreal, Canada:
 #include "Gpudecoder.hpp"
 
 #include <cstdio>
+#include <cstdint>
 #include <chrono>
 #include <string>
 #include <iomanip>
@@ -84,9 +85,18 @@ namespace rvs
 							size_t yInputBytes, size_t uvInputBytes,
 							void*& devReadYUV, cudaEvent_t& importColorFinished)
 		{
-			const long frameOffset = static_cast<long>((yInputBytes + 2 * uvInputBytes) * frame);
+			// NB: on Windows MSVC, `long` is 32 bits and `fseek` takes a 32-bit offset.
+			// For 2K/4K YUV sequences the per-frame offset exceeds 2 GiB after ~87-172 frames,
+			// which silently truncates and causes the periodic frame corruption. We must use
+			// a 64-bit offset and the 64-bit seek API.
+			const int64_t frameOffset =
+				static_cast<int64_t>(yInputBytes + 2 * uvInputBytes) * static_cast<int64_t>(frame);
 
-			fseek(inputColorFileYUV, frameOffset, SEEK_SET);
+#if defined(_WIN32)
+			_fseeki64(inputColorFileYUV, frameOffset, SEEK_SET);
+#else
+			fseeko(inputColorFileYUV, static_cast<off_t>(frameOffset), SEEK_SET);
+#endif
 			read_raw(inputColorFileYUV, hostYUV);
 
 			importColorsToGPU<channel_t, color_t>(hostYUV, devNormalizedYUV, initialY_size, realSize, initialColorsType, colorScale,
@@ -103,7 +113,16 @@ namespace rvs
 							void*& devReadDepth,
 							cudaEvent_t& importDepthFinished)
 		{
-			fseek(inputDepthFile, static_cast<long>((inputDepthBytes * 3 / 2) * frame), SEEK_SET);
+			// Same 32-bit overflow fix as read_color_YUV: use a 64-bit offset and the
+			// 64-bit seek API so that depth frames past the 2 GiB mark are read correctly.
+			const int64_t depthFrameOffset =
+				static_cast<int64_t>(inputDepthBytes * 3 / 2) * static_cast<int64_t>(frame);
+
+#if defined(_WIN32)
+			_fseeki64(inputDepthFile, depthFrameOffset, SEEK_SET);
+#else
+			fseeko(inputDepthFile, static_cast<off_t>(depthFrameOffset), SEEK_SET);
+#endif
 			read_raw(inputDepthFile, hostDepth);
 
 			float near_val = parameters.getDepthRange()[0];
@@ -116,6 +135,7 @@ namespace rvs
 										importDepthFinished);
 		}
 	}
+
 
 	template<typename channel_t, typename color_t>
 	void read_color(FILE*& inputColorFileYUV, int frame, color_t*& devNormalizedYUV,
