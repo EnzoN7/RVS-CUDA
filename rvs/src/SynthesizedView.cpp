@@ -123,15 +123,22 @@ namespace rvs
         m_futureProjection = std::async(std::launch::async,
             [this, &inputImage, &stream2]()
             {
-                cv::Matx33f R = m_space_transformer->get_rotation();
-                cv::Vec3f t = m_space_transformer->get_translation();
                 Parameters virtualParams = m_space_transformer->getVirtualParameters();
+                //@Hope
+                /*cv::Matx33f R = m_space_transformer->get_rotation();
+                cv::Vec3f t = m_space_transformer->get_translation();
+                prepareParameters(m_realSize, m_inputParams.getHorRange(), m_inputParams.getVerRange(), R, t, virtualParams.getFocal(), virtualParams.getPrinciplePoint());*/
 
-                prepareParameters(m_realSize, m_inputParams.getHorRange(), m_inputParams.getVerRange(), R, t, virtualParams.getFocal(), virtualParams.getPrinciplePoint());
-
+                prepareParameters(m_realSize, m_inputParams, virtualParams);
+                
                 m_devNormalizedDepth = inputImage->waitAndGetNormalizedDepth();
 
-                unprojectTo3D_projectTo2D(virtualParams, stream2);
+                //@HoPe
+                //When input views are perspective
+                if(m_inputParams.getProjectionType()=="Perspective")
+                    unprojectTo2D_projectTo2D(virtualParams, stream2); 
+                else
+                    unprojectTo3D_projectTo2D(virtualParams, stream2);
 
                 if (virtualParams.getProjectionType() != "Equirectangular" && detail::g_rescale < 1.0f)
                     scaleUV(m_devTransformedPosition, detail::g_rescale, m_realSize.area(), stream2);
@@ -148,6 +155,7 @@ namespace rvs
              typename channel_t>
 	void SynthetizedViewTriangle<position_t, color_t, channel_t>::unprojectTo3D_projectTo2D(Parameters& virtualParams, cudaStream_t& stream)
 	{
+
 		if (virtualParams.getProjectionType() == "Equirectangular")
 		{
 			unprojectERP_projectERP<position_t, channel_t>(m_realSize,
@@ -171,6 +179,24 @@ namespace rvs
 											                       stream);
 		}
 	}
+
+
+    //@HoPe
+    //When input views are perspective
+    template<typename position_t,
+        typename color_t,
+        typename channel_t>
+    void SynthetizedViewTriangle<position_t, color_t, channel_t>::unprojectTo2D_projectTo2D(Parameters& virtualParams, cudaStream_t& stream)
+    {
+            unprojectPerspective_projectPerspective<position_t, channel_t>(m_realSize,
+                m_devNormalizedDepth,
+                m_devTransformedPosition,
+                m_devTransformedDepth,
+                m_precomputedParams,
+                stream);
+        
+    }
+
 
     template<typename position_t,
              typename color_t,
@@ -198,6 +224,9 @@ namespace rvs
                                                                            m_futureProjection);
 	}
 
+
+    //@HoPe Comment) 
+    //TODO: Remove this method later
     template<typename position_t,
              typename color_t,
              typename channel_t>
@@ -300,6 +329,137 @@ namespace rvs
             m_lastP = p;
         }
     }
+
+
+    //@HoPe  
+    //Modified prepareParameters method that add input perspective view params to the PrecomputedParams
+    template<typename position_t,
+        typename color_t,
+        typename channel_t>
+void SynthetizedViewTriangle<position_t, color_t, channel_t>::prepareParameters(cv::Size size, const Parameters& input_params, Parameters& virtualParams)
+{
+      
+    cv::Matx33f R = m_space_transformer->get_rotation();
+    cv::Vec3f t = m_space_transformer->get_translation();
+
+    cv::Vec2f hor_range = input_params.getHorRange();
+    cv::Vec2f ver_range = input_params.getVerRange();
+
+    cv::Vec2f f = virtualParams.getFocal(); 
+    cv::Vec2f p = virtualParams.getPrinciplePoint();
+
+    //When the output does not have Focal (f) and PrinciplePoint (p), it means that it is ERP
+    //bool isVirtualERP =  (f[0] == 0.f && f[1] == 0.f && p[0] == 0.f && p[1] == 0.f);
+    //But we can only check projection type!
+    bool isVirtualERP = (virtualParams.getProjectionType() == "Equirectangular");
+
+    m_precomputedParams.camData.rotation[0] = R(0, 0);
+    m_precomputedParams.camData.rotation[1] = R(0, 1);
+    m_precomputedParams.camData.rotation[2] = R(0, 2);
+    m_precomputedParams.camData.rotation[3] = R(1, 0);
+    m_precomputedParams.camData.rotation[4] = R(1, 1);
+    m_precomputedParams.camData.rotation[5] = R(1, 2);
+    m_precomputedParams.camData.rotation[6] = R(2, 0);
+    m_precomputedParams.camData.rotation[7] = R(2, 1);
+    m_precomputedParams.camData.rotation[8] = R(2, 2);
+
+    m_precomputedParams.camData.translation[0] = t[0];
+    m_precomputedParams.camData.translation[1] = t[1];
+    m_precomputedParams.camData.translation[2] = t[2];
+
+    //For input ERP these are always zero
+    cv::Vec2f in_f=  input_params.getFocal();
+    cv::Vec2f in_p = input_params.getPrinciplePoint();
+    m_precomputedParams.in_focal[0] = in_f[0];
+    m_precomputedParams.in_focal[1] = in_f[1];
+    m_precomputedParams.in_principlePoint[0] = in_p[0];
+    m_precomputedParams.in_principlePoint[1] = in_p[1];
+
+    if (size != m_lastSize)
+    {
+        int blockWidth = 8;
+        int blockHeight = 16;
+        m_precomputedParams.blockDim = dim3(blockWidth, blockHeight);
+        m_precomputedParams.gridDim = dim3((size.width - 1 + blockWidth) / blockWidth,
+            (size.height - 1 + blockHeight) / blockHeight);
+
+        float radperdeg = 0.01745329252f;
+        m_precomputedParams.dev_dphi_du = -radperdeg * (hor_range[1] - hor_range[0]) / size.width;
+        m_precomputedParams.dev_dtheta_dv = -radperdeg * (ver_range[1] - ver_range[0]) / size.height;
+
+        m_lastSize = size;
+    }
+
+    if (hor_range != m_lastHorRange)
+    {
+        float radperdeg = 0.01745329252f;
+        m_precomputedParams.devPhi0 = radperdeg * hor_range[1];
+        m_precomputedParams.dev_dphi_du = -radperdeg * (hor_range[1] - hor_range[0]) / size.width;
+
+       
+        if (isVirtualERP)
+        {
+            const float degperrad = 57.295779513f;
+            m_precomputedParams.devU0 = size.width * hor_range[1] / (hor_range[1] - hor_range[0]);
+            m_precomputedParams.dev_du_dphi = -degperrad * size.width / (hor_range[1] - hor_range[0]);
+        }
+        m_lastHorRange = hor_range;
+    }
+
+    if (ver_range != m_lastVerRange)
+    {
+        float radperdeg = 0.01745329252f;
+        m_precomputedParams.devTheta0 = radperdeg * ver_range[1];
+        m_precomputedParams.dev_dtheta_dv = -radperdeg * (ver_range[1] - ver_range[0]) / size.height;
+
+        if (isVirtualERP)
+        {
+            const float degperrad = 57.295779513f;
+            m_precomputedParams.devV0 = size.height * ver_range[1] / (ver_range[1] - ver_range[0]);
+            m_precomputedParams.dev_dv_dtheta = -degperrad * size.height / (ver_range[1] - ver_range[0]);
+        }
+        m_lastVerRange = ver_range;
+    }
+
+    if (f != m_lastF)
+    {
+        m_precomputedParams.camData.focal[0] = f[0];
+        m_precomputedParams.camData.focal[1] = f[1];
+        if (isVirtualERP)
+        {
+            const float degperrad = 57.295779513f;
+            m_precomputedParams.devU0 = size.width * hor_range[1] / (hor_range[1] - hor_range[0]);
+            m_precomputedParams.dev_du_dphi = -degperrad * size.width / (hor_range[1] - hor_range[0]);
+        }
+        else
+        {
+            m_precomputedParams.devU0 = 0;
+            m_precomputedParams.dev_du_dphi = 0;
+        }
+        m_lastF = f;
+    }
+
+    if (p != m_lastP)
+    {
+        m_precomputedParams.camData.principlePoint[0] = p[0];
+        m_precomputedParams.camData.principlePoint[1] = p[1];
+        if (f[0] == 0.f && f[1] == 0.f && p[0] == 0.f && p[1] == 0.f)
+        {
+            const float degperrad = 57.295779513f;
+            m_precomputedParams.devV0 = size.height * ver_range[1] / (ver_range[1] - ver_range[0]);
+            m_precomputedParams.dev_dv_dtheta = -degperrad * size.height / (ver_range[1] - ver_range[0]);
+        }
+        else
+        {
+            m_precomputedParams.devV0 = 0;
+            m_precomputedParams.dev_dv_dtheta = 0;
+        }
+        m_lastP = p;
+    }
+}
+
+
+
 
     template class SynthesizedView<float2, float3, float>;
     template class SynthesizedView<double2, double3, double>;

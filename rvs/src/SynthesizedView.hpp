@@ -119,6 +119,10 @@ namespace rvs
 
 		void unprojectTo3D_projectTo2D(Parameters& virtualParams, cudaStream_t& stream);
 
+		//@HoPe
+		//When input views are perspective
+		void unprojectTo2D_projectTo2D(Parameters& virtualParams, cudaStream_t& stream);
+
 	private:
 		SpaceTransformer const* m_space_transformer;
 		Parameters m_inputParams;
@@ -154,8 +158,14 @@ namespace rvs
 
 		WrappingMethod m_wrappingMethod;
 
+		//@HoPe Comment) 
+		//TODO: Remove this method later
 		void prepareParameters(cv::Size size, cv::Vec2f hor_range, cv::Vec2f ver_range,
 							   cv::Matx33f R, cv::Vec3f t, cv::Vec2f f, cv::Vec2f p);
+		//@HoPe  
+		//Modified prepareParameters method that add input perspective view params to the PrecomputedParams
+		void prepareParameters(cv::Size size, const Parameters& input_params, Parameters& virtualParams);
+
 	};
 }
 

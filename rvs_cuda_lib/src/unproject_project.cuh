@@ -27,6 +27,8 @@ struct CamData
 struct PrecomputedParams
 {
     CamData camData;
+
+    //For ERP unproject
     float devPhi0;
     float devTheta0;
     float dev_dphi_du;
@@ -36,6 +38,11 @@ struct PrecomputedParams
     float devV0;
     float dev_du_dphi;
     float dev_dv_dtheta;
+
+    //@HoPe
+    //For perspective unproject
+    float in_focal[2];
+    float in_principlePoint[2];
 
     dim3 gridDim;
     dim3 blockDim;
@@ -55,6 +62,14 @@ void unprojectERP_projectERP(cv::Size size,
 
 template<typename position_t, typename channel_t>
 void unprojectERP_projectPerspective(cv::Size size,
+    channel_t*& devDepth, position_t*& devTransformedPosition, channel_t*& devTransformedDepth,
+    const PrecomputedParams& params,
+    cudaStream_t& stream);
+
+//@HoPe
+//For input perspective views to the output viewport
+template<typename position_t, typename channel_t>
+void unprojectPerspective_projectPerspective(cv::Size size,
     channel_t*& devDepth, position_t*& devTransformedPosition, channel_t*& devTransformedDepth,
     const PrecomputedParams& params,
     cudaStream_t& stream);

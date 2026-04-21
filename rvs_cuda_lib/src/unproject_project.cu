@@ -148,6 +148,9 @@ __global__ void unprojectERP_projectERP_kernel<half2, half>(half* depth, half* v
     imagePos[threadId] = make_half2(hNAN, hNAN);
 }
 
+
+//================================================================================================
+
 template<typename position_t, typename channel_t>
 __global__ void unprojectERP_projectPerspective_kernel(channel_t* depth, channel_t* virtualDepth, position_t* imagePos,
                                                        float phi0, float theta0, float dphi_du, float dtheta_dv,
@@ -276,6 +279,141 @@ __global__ void unprojectERP_projectPerspective_kernel<half2, half>(half* depth,
     imagePos[threadId] = make_half2(hNAN, hNAN);
 }
 
+
+//@HoPe
+// Cuda kernel for input perspective views to the output viewport
+//================================================================================================
+template<typename position_t, typename channel_t>
+__global__ void unprojectPerspective_projectPerspective_kernel(channel_t* depth, channel_t* virtualDepth, position_t* imagePos,
+    float2 in_focal, float2 in_principle,
+    CamData camData, int imgWidth, int imgHeight)
+{
+    int tx = blockIdx.x * blockDim.x + threadIdx.x;
+    int ty = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (tx >= imgWidth || ty >= imgHeight)
+        return;
+
+    int threadId = ty * imgWidth + tx;
+
+    vec2_t<channel_t> uv;
+    if (ty == 0)
+        uv = { (channel_t)tx + (channel_t)0.5, (channel_t)0 };
+    else if (ty == imgHeight - 1)
+        uv = { (channel_t)tx + (channel_t)0.5, (channel_t)imgHeight };
+    else
+        uv = { (channel_t)tx + (channel_t)0.5, (channel_t)ty + (channel_t)0.5 };
+
+    float2 f = in_focal;
+    float2 p = in_principle;
+    channel_t depthValue = depth[threadId];
+
+    if (!isNaN(depthValue))
+    {
+
+        vec3_t<channel_t> world_pos =
+        {
+            depthValue,
+            -(depthValue / f.x) * (uv.x - p.x),
+            -(depthValue / f.y) * (uv.y - p.y)
+        };
+
+        vec3_t<channel_t> xyz =
+        {
+            camData.rotation[0] * world_pos.x + camData.rotation[1] * world_pos.y + camData.rotation[2] * world_pos.z + camData.translation[0],
+            camData.rotation[3] * world_pos.x + camData.rotation[4] * world_pos.y + camData.rotation[5] * world_pos.z + camData.translation[1],
+            camData.rotation[6] * world_pos.x + camData.rotation[7] * world_pos.y + camData.rotation[8] * world_pos.z + camData.translation[2]
+        };
+
+        if (xyz.x > (channel_t)1e-6)
+        {
+            channel_t posx = -camData.focal[0] * xyz.y / xyz.x + camData.principlePoint[0];
+            channel_t posy = -camData.focal[1] * xyz.z / xyz.x + camData.principlePoint[1];
+
+            if (posx >= (channel_t)1e-6 && posy >= (channel_t)1e-6)
+            {
+                imagePos[threadId] = { posx, posy };
+                virtualDepth[threadId] = xyz.x;
+                return;
+            }
+        }
+    }
+
+    virtualDepth[threadId] = NAN;
+    imagePos[threadId] = { NAN, NAN };
+}
+
+template<>
+__global__ void unprojectPerspective_projectPerspective_kernel<half2, half>(half* depth, half* virtualDepth, half2* imagePos,
+    float2 in_focal, float2 in_principle,
+    CamData camData, int imgWidth, int imgHeight)
+{
+    int tx = blockIdx.x * blockDim.x + threadIdx.x;
+    int ty = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (tx >= imgWidth || ty >= imgHeight)
+        return;
+
+    int threadId = ty * imgWidth + tx;
+    half2 uv;
+    if (ty == 0)
+        uv = __floats2half2_rn((float)tx + 0.5f, 0.0f);
+    else if (ty == imgHeight - 1)
+        uv = __floats2half2_rn((float)tx + 0.5f, (float)imgHeight);
+    else
+        uv = __floats2half2_rn((float)tx + 0.5f, (float)ty + 0.5f);
+    __half2 f = __floats2half2_rn(in_focal.x, in_focal.y);
+    __half2 p = __floats2half2_rn(in_principle.x, in_principle.y);
+    half depthValue = depth[threadId];
+
+    if (!isNaN(depthValue))
+    {
+
+        half3 world_pos;
+        world_pos.Y.x = depthValue;
+        world_pos.UV.x = -(depthValue / f.x) * (uv.x - p.x);
+        world_pos.UV.y = -(depthValue / f.y) * (uv.y - p.y);
+
+        half3 xyz;
+        xyz.Y.x = __float2half(camData.rotation[0]) * world_pos.Y.x +
+            __float2half(camData.rotation[1]) * world_pos.UV.x +
+            __float2half(camData.rotation[2]) * world_pos.UV.y +
+            __float2half(camData.translation[0]);
+
+        xyz.UV.x = __float2half(camData.rotation[3]) * world_pos.Y.x +
+            __float2half(camData.rotation[4]) * world_pos.UV.x +
+            __float2half(camData.rotation[5]) * world_pos.UV.y +
+            __float2half(camData.translation[1]);
+
+        xyz.UV.y = __float2half(camData.rotation[6]) * world_pos.Y.x +
+            __float2half(camData.rotation[7]) * world_pos.UV.x +
+            __float2half(camData.rotation[8]) * world_pos.UV.y +
+            __float2half(camData.translation[2]);
+
+        half EPS = __float2half(6e-5f);
+        if (xyz.Y.x > EPS)
+        {
+            half posx = __float2half(-camData.focal[0]) * xyz.UV.x / xyz.Y.x +
+                __float2half(camData.principlePoint[0]);
+
+            half posy = __float2half(-camData.focal[1]) * xyz.UV.y / xyz.Y.x +
+                __float2half(camData.principlePoint[1]);
+
+            if (posx >= EPS && posy >= EPS)
+            {
+                imagePos[threadId] = make_half2(posx, posy);
+                virtualDepth[threadId] = xyz.Y.x;
+                return;
+            }
+        }
+    }
+
+    virtualDepth[threadId] = hNAN;
+    imagePos[threadId] = make_half2(hNAN, hNAN);
+}
+
+//================================================================================================
+
 template<typename position_t, typename channel_t>
 void unprojectERP_projectERP(cv::Size size,
                              channel_t*& devDepth, position_t*& devTransformedPosition, channel_t*& devTransformedDepth,
@@ -324,6 +462,35 @@ void unprojectERP_projectPerspective(cv::Size size,
 #endif
 }
 
+//@HoPe
+//For input perspective views to the output viewport
+template<typename position_t, typename channel_t>
+void unprojectPerspective_projectPerspective(cv::Size size,
+    channel_t*& devDepth, position_t*& devTransformedPosition, channel_t*& devTransformedDepth,
+    const PrecomputedParams& params,
+    cudaStream_t& stream)
+{
+    float2 f = make_float2(params.in_focal[0], params.in_focal[1]);
+    float2 p = make_float2(params.in_principlePoint[0], params.in_principlePoint[1]);
+
+    unprojectPerspective_projectPerspective_kernel<position_t, channel_t> << <params.gridDim, params.blockDim, 0, stream >> > (
+        devDepth, devTransformedDepth, devTransformedPosition,
+        f,p,
+        params.camData,
+        size.width, size.height);
+
+#ifdef _DEBUG
+    cudaError_t state = cudaGetLastError();
+    if (state != cudaSuccess)
+    {
+        std::cerr << "[CUDA ERROR]: " << cudaGetErrorString(state) << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+#endif
+}
+
+//================================================================================================
+
 template void unprojectERP_projectERP<float2, float>(cv::Size size,
     float*& devDepth, float2*& devTransformedPosition, float*& devTransformedDepth,
     const PrecomputedParams& params,
@@ -338,6 +505,7 @@ template void unprojectERP_projectERP<half2, half>(cv::Size size,
     half*& devDepth, half2*& devTransformedPosition, half*& devTransformedDepth,
     const PrecomputedParams& params,
     cudaStream_t& stream);
+//================================================================================================
 
 template void unprojectERP_projectPerspective<float2, float>(cv::Size size,
     float*& devDepth, float2*& devTransformedPosition, float*& devTransformedDepth,
@@ -353,3 +521,23 @@ template void unprojectERP_projectPerspective<half2, half>(cv::Size size,
     half*& devDepth, half2*& devTransformedPosition, half*& devTransformedDepth,
     const PrecomputedParams& params,
     cudaStream_t& stream);
+
+
+//@HoPe
+//For input perspective views to the output viewport
+//================================================================================================
+template void unprojectPerspective_projectPerspective<float2, float>(cv::Size size,
+    float*& devDepth, float2*& devTransformedPosition, float*& devTransformedDepth,
+    const PrecomputedParams& params,
+    cudaStream_t& stream);
+
+template void unprojectPerspective_projectPerspective<double2, double>(cv::Size size,
+    double*& devDepth, double2*& devTransformedPosition, double*& devTransformedDepth,
+    const PrecomputedParams& params,
+    cudaStream_t& stream);
+
+template void unprojectPerspective_projectPerspective<half2, half>(cv::Size size,
+    half*& devDepth, half2*& devTransformedPosition, half*& devTransformedDepth,
+    const PrecomputedParams& params,
+    cudaStream_t& stream);
+//================================================================================================
