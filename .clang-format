@@ -1,0 +1,60 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+# Indentation : tabs de 4
+UseTab: Always
+TabWidth: 4
+IndentWidth: 4
+ContinuationIndentWidth: 4
+
+# Accolades style Allman (sur leur propre ligne)
+BreakBeforeBraces: Allman
+
+# Pointeurs collés au type : int*& foo
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Templates : pas d'espace, et `template<...>` reste sur sa propre ligne
+SpaceAfterTemplateKeyword: false
+AlwaysBreakTemplateDeclarations: Yes
+
+# Listes d'init de constructeur : virgule en début de ligne
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 0
+PackConstructorInitializers: Never
+
+# Namespace : indenté
+NamespaceIndentation: All
+CompactNamespaces: false
+FixNamespaceComments: false
+
+# Lignes longues tolérées (le code utilise des lignes > 120)
+ColumnLimit: 0
+
+# Pas de raccourcis sur une ligne
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+
+# Alignements
+AlignAfterOpenBracket: Align
+AlignTrailingComments: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
+# Includes : ne pas réordonner (CUDA + OpenCV ont des ordres importants)
+SortIncludes: false
+SortUsingDeclarations: false
+
+# Divers
+Cpp11BracedListStyle: true
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpacesInAngles: Never
+DerivePointerAlignment: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
